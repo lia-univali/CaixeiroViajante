@@ -2,6 +2,13 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include <QHBoxLayout>
+#include <QVBoxLayout>
+#include <QWidget>
+
+#include "representationpane.h"
+#include "chartpane.h"
+#include "logpane.h"
 
 class MainWindow : public QMainWindow
 {
@@ -10,6 +17,18 @@ class MainWindow : public QMainWindow
 public:
     MainWindow(QWidget *parent = 0);
     ~MainWindow();
+
+private:
+    QHBoxLayout *mainLayout;
+    QVBoxLayout *rightLayout;
+    QWidget *mainWidget;
+    QWidget *rightWidget;
+
+    RepresentationPane *representationPane;
+    ChartPane *chartPane;
+    LogPane *logPane;
+
+
 };
 
 #endif // MAINWINDOW_H
