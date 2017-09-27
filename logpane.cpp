@@ -44,5 +44,8 @@ void LogPane::clearLog(){
 void LogPane::addLog(std::string str){
     str += "\n";
     logs->insertPlainText( QString::fromStdString(str) );
+    QTextCursor textCursor = logs->textCursor();
+    textCursor.movePosition(QTextCursor::End);
+    logs->setTextCursor(textCursor);
 }
 

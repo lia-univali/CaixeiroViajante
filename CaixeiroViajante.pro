@@ -17,10 +17,12 @@ SOURCES += main.cpp\
         mainwindow.cpp \
     logpane.cpp \
     representationpane.cpp \
-    chartpane.cpp
+    chartpane.cpp \
+    toolbox.cpp
 
 HEADERS  += mainwindow.h \
     representationpane.h \
     chartpane.h \
     logpane.h \
-    graph.h
+    graph.h \
+    toolbox.h
