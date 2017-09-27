@@ -29,6 +29,10 @@ public:
         throw std::exception();
     }
 
+    std::string getNameOfVertice(int &index) {
+        return vertices.at(index).name;
+    }
+
     void addVertice(std::string name) {
         Vertice vertice(name);
         vertices.push_back(vertice);
@@ -42,7 +46,7 @@ public:
         return false;
     }
 
-    Edge getEdge(int source, int target) {
+    Edge getEdge(int &source, int &target) {
         std::vector<Edge> edges = vertices.at(source).edges;
         for(Edge &edge : edges)
             if(edge.target == target)
@@ -51,9 +55,10 @@ public:
     }
 
     void addEdge(int source, int target, int weight) {
-        Edge edge(source, target, weight);
-        vertices.at(source).edges.push_back(edge);
-        vertices.at(target).edges.push_back(edge);
+        Edge fromSource(source, target, weight);
+        vertices.at(source).edges.push_back(fromSource);
+        Edge fromTarget(target, source, weight);
+        vertices.at(target).edges.push_back(fromTarget);
     }
 
     void addEdge(std::string source, std::string target, int weight) {
