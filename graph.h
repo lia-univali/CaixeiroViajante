@@ -29,7 +29,7 @@ public:
         throw std::exception();
     }
 
-    std::string getNameOfVertice(int index) {
+    std::string getNameOfVertice(int &index) {
         return vertices.at(index).name;
     }
 
@@ -46,7 +46,7 @@ public:
         return false;
     }
 
-    Edge getEdge(int source, int target) {
+    Edge getEdge(int &source, int &target) {
         std::vector<Edge> edges = vertices.at(source).edges;
         for(Edge &edge : edges)
             if(edge.target == target)
