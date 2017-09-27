@@ -10,6 +10,8 @@
 #include "chartpane.h"
 #include "logpane.h"
 
+#include "graph.h"
+
 class MainWindow : public QMainWindow
 {
     Q_OBJECT
@@ -28,6 +30,8 @@ private:
     ChartPane *chartPane;
     LogPane *logPane;
 
+
+    Graph graph;
 
 };
 

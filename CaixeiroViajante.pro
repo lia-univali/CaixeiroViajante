@@ -22,4 +22,5 @@ SOURCES += main.cpp\
 HEADERS  += mainwindow.h \
     representationpane.h \
     chartpane.h \
-    logpane.h
+    logpane.h \
+    graph.h

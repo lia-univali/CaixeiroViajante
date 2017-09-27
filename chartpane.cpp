@@ -20,3 +20,57 @@ ChartPane::ChartPane()
     mainLayout->addWidget( chart, 1 );
 }
 
+void ChartPane::clearChart(){
+    steps.clear();
+    this->repaint();
+}
+
+void ChartPane::addStep(double step){
+    steps.push_back(step);
+    this->repaint();
+}
+
+
+
+void ChartPane::paintEvent(QPaintEvent *)
+{
+    QPainter painter(this);
+    painter.setBrush(QBrush(QColor("white")));
+    painter.fillRect( 0, 30, width()-1, height()-31, Qt::SolidPattern );
+    painter.setPen(QColor("black"));
+    painter.drawRect( 0, 30, width()-1, height()-31 );
+
+    if ( steps.size() >= 2 ){
+
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

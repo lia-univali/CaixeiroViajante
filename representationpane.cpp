@@ -1,6 +1,6 @@
 #include "representationpane.h"
 
-RepresentationPane::RepresentationPane()
+RepresentationPane::RepresentationPane(Graph *graph) : graph(graph)
 {
 }
 

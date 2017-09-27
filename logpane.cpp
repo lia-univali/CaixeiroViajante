@@ -6,6 +6,8 @@ LogPane::LogPane(QWidget *parent) : QWidget(parent)
     setMinimumWidth(400);
 
     mainLayout = new QVBoxLayout;
+    mainLayout->setSpacing(0);
+    mainLayout->setMargin(0);
     this->setLayout(mainLayout);
 
     titleWidget = new QWidget;

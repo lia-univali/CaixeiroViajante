@@ -8,7 +8,7 @@ MainWindow::MainWindow(QWidget *parent)
     mainWidget = new QWidget;
     rightWidget = new QWidget;
 
-    representationPane = new RepresentationPane;
+    representationPane = new RepresentationPane(&graph);
     chartPane = new ChartPane;
     logPane = new LogPane;
 
