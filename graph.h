@@ -4,35 +4,63 @@
 #include <vector>
 
 struct Edge {
-    int origin, target;
+    int source, target;
     double distance;
-    Edge(int origin, int target, double distance) 
-        : origin (origin), target (target), distance (distance) {}        
+    Edge(int source, int target, double distance)
+        : source (source), target (target), distance (distance) {}
 };
-
-using Edges = std::vector<Edge>;
 
 struct Vertice {
     std::string name;
-}
+    std::vector<Edge> edges;
+    Vertice(std::string name)
+        : name (name) {}
+};
 
 class Graph {
 public:
     std::vector<Vertice> vertices;
-    std::vector<Edges> adjacents;
     Graph() {}
-    Graph(std::vector<Vertice> vertices, std::vector<Edge> edges) 
-        : vertices (vertices), edges (edges) {}
-        
-    std::vector<Edge> getAdjacents(int verticeIndex) {
-        return adjacents.at(verticeIndex);
+
+    int getIndexOfVertice(std::string name) {
+        for(int i = 0; i < vertices.size(); i++)
+            if(vertices.at(i).name == name)
+                return i;
+        throw std::exception();
     }
-    Edge getEdge(int origin, int target) {
-        for(Edge edge in adjacents.at(origin))
-            if (edge.target == target)
+
+    void addVertice(std::string name) {
+        Vertice vertice(name);
+        vertices.push_back(vertice);
+    }
+
+    bool isConnected(int &source, int &target) {
+        std::vector<Edge> &edges = vertices.at(source).edges;
+        for(Edge &edge : edges)
+            if(edge.target == target)
+                return true;
+        return false;
+    }
+
+    Edge getEdge(int source, int target) {
+        std::vector<Edge> edges = vertices.at(source).edges;
+        for(Edge &edge : edges)
+            if(edge.target == target)
                 return edge;
         throw std::exception();
     }
-}
+
+    void addEdge(int source, int target, int weight) {
+        Edge edge(source, target, weight);
+        vertices.at(source).edges.push_back(edge);
+        vertices.at(target).edges.push_back(edge);
+    }
+
+    void addEdge(std::string source, std::string target, int weight) {
+        int sourceIndex = getIndexOfVertice(source);
+        int targetIndex = getIndexOfVertice(target);
+        addEdge(sourceIndex, targetIndex, weight);
+    }
+};
 
 #endif
