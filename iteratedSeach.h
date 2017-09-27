@@ -4,7 +4,7 @@
 #include "graph.h"
 #include "solution.h"
 
-void isHamiltonianCicle(Graph graph, std::vector<int> path) {
+bool isHamiltonianCicle(Graph &graph, std::vector<int> &path) {
     for(int i = 0; i < path.size(); i++) {
         int source = path.at(i);
         int target = path.at(path.size() % (i + 1));
@@ -14,7 +14,7 @@ void isHamiltonianCicle(Graph graph, std::vector<int> path) {
     return true;
 }
 
-void iteratedSearch(Graph &graph, std::string &startNode) {
+Solution iteratedSearch(Graph &graph, std::string &startNode) {
     Solution currentSol;
     int numberOfNodes = graph.vertices.size();
     for(int i = graph.getIndexOfVertice(startNode); currentSol.path.size() != numberOfNodes; i++)
