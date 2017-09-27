@@ -14,10 +14,6 @@ struct Solution {
 };
 
 float getPathWeight(int startNodeIndex, std::vector<int> path, Graph graph) {
-    int val =0, bs =4;
-    if(graph.isConnected(val, bs))
-        std::cout << "porrraaaaaaaaaaaaa";
-
     if(!graph.isConnected(startNodeIndex, path.at(0)))
         return -1;
     float weight = graph.getEdge(startNodeIndex, path.at(0)).distance;
@@ -40,7 +36,7 @@ void printPath(int startNode, std::vector<int> path) {
     std::cout << std::endl;
 }
 
-std::vector<int> bruteForceSearch(Graph graph, std::string startNode) {
+Solution bruteForceSearch(Graph graph, std::string startNode) {
     int startNodeIndex = graph.getIndexOfVertice(startNode);
     // remove o vértice inicial do vetor de permutações
     std::vector<int> currentPath;
@@ -56,10 +52,8 @@ std::vector<int> bruteForceSearch(Graph graph, std::string startNode) {
             sol.weight = currentWeight;
             sol.path = currentPath;
         }
-
-            printPath(startNodeIndex, currentPath);
-            std::cout << "Distance: " << currentWeight << std::endl;
     } while(std::next_permutation(currentPath.begin(), currentPath.end()));
+    return sol;
 }
 
 #endif
