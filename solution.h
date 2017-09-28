@@ -1,33 +1,29 @@
 #ifndef SOLUTION_H
 #define SOLUTION_H
 
-struct Solution {
-    std::vector<int> path;
-    float weight;
-    Solution() {
-        weight = INT_MAX;
-    }
+#include <cmath>
+
+struct Coordinate {
+    std::string name;
+    float x, y;
+    Coordinate();
+    Coordinate(float x, float y)
+        : x (x), y (y) {}
 };
 
-float getPathWeight(std::vector<int> &path, Graph &graph) {
-    float weight = 0;
-    int source, target;
-    for(int i = 0; i < path.size(); i++){
-        source = path.at(i);
-        target = (i + 1 < path.size()) ? path.at(i + 1) : path.at(0);
-        if(graph.isConnected(source, target))
-            weight += graph.getEdge(source, target).distance;
-        else
-            return -1; // caso não haja navegação de um trajeto entre duas cidades, ou seja, inadmissível
-    }
-    return weight;
-}
+struct Solution {
+    std::vector<int> path;
+    long double distance = INT_MAX;
+};
 
-void printPath(int &startNode, const std::vector<int> &path) {
-    std::cout << startNode;
-    for(int vertice : path)
-        std::cout <<  " => " << vertice;
-    std::cout << std::endl;
+long double getPathDistance(std::vector<Coordinate> &cities, std::vector<int> &path) {
+    double distance = 0;
+    for(int i = 0; i < path.size(); i++) {
+        Coordinate a = cities.at(path.at(i));
+        Coordinate b = cities.at( (i + 1 < path.size()) ? path.at(i + 1) : path.at(0));
+        distance += std::sqrt(std::pow(a.x - b.x, 2) + std::pow(a.y - b.y, 2));
+    }
+    return distance;
 }
 
 #endif // SOLUTION_H

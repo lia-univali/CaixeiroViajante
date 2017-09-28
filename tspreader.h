@@ -8,6 +8,7 @@
 #include <iterator>
 #include <string>
 #include <stdlib.h>
+#include "solution.h"
 
 template<typename Out>
 void split(const std::string &s, char delim, Out result) {
@@ -24,14 +25,6 @@ std::vector<std::string> split(const std::string &s, char delim) {
     split(s, delim, std::back_inserter(elems));
     return elems;
 }
-
-struct Coordinate {
-    std::string name;
-    float x, y;
-    Coordinate();
-    Coordinate(float x, float y)
-        : x (x), y (y) {}
-};
 
 std::vector<Coordinate> getTspInstance(std::string filePath, int numberOfCoordinates = INT_MAX) {
     std::ifstream file(filePath);
