@@ -22,12 +22,21 @@ Solution iteratedSearch(Graph &graph, std::string &startNode) {
 
     Solution bestSol = currentSol;
     bool stoppingCriterion = false;
-    bool improvement = false;
+    bool improvement;
     do {
-        for(int i = 1; i < path.size(); i++) {
-            for(int j = i + 1; j < path.size(); j++){
-                std::swap(path.at(i), path.at(j));
+        improvement = false;
+        for(int i = 1; i < path.size() - 1; i++) {
+            Sol neighbor;
+            neighbor.path = currentSol.path;
+            std::swap(neighbor.path.at(i), neighbor.path.at(i + 1));
+            neighbor.distance = getPathWeight(sol.path, graph);
+            if(neighbor.distance < currentSol.distance) {
+                currentSol = neighbor;
+                improvement = true;
             }
+        }
+        if(!improvement) {
+            // perturbar solução
         }
     } while(stoppingCriterion != false);
 }
