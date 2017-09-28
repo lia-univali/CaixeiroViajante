@@ -18,13 +18,13 @@ LogPane::LogPane(QWidget *parent) : QWidget(parent)
     title = new QLabel("Log");
     title->setStyleSheet("color: black; font-weight: bold;");
     titleLayout->addWidget(title, 1);
-    clearBtn = new QPushButton("Clear Log");
+    clearBtn = new QPushButton("Limpar Log");
     titleLayout->addWidget(clearBtn, 0);
 
     connect( clearBtn, SIGNAL(clicked()), this, SLOT(clearLog()) );
 
     logs = new QTextEdit;
-    logs->setStyleSheet("background-color: black; color: white;");
+    logs->setStyleSheet("font-family: \"Anonymous Pro 11\"; background-color: black; color: white;");
     QPalette palette = logs->palette();
     palette.setColor(QPalette::Highlight, QColor("white"));
     palette.setColor(QPalette::HighlightedText, QColor("black"));

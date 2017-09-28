@@ -1,77 +1,102 @@
 #include "toolbox.h"
 
-ToolBox::ToolBox(QWidget *parent) : QWidget(parent)
+#include "setupalgorithms.h"
+#include "tspreader.h"
+
+ToolBox::ToolBox(GraphicData *graphicData, QWidget *parent) : QWidget(parent), graphicData(graphicData)
 {
+    setupAlgorithms(algorithms);
+
     mainLayout = new QHBoxLayout;
     mainLayout->setSpacing(0);
     mainLayout->setMargin(0);
     this->setLayout(mainLayout);
 
-    runBtn = new QPushButton("Rodar");
+    loadBtn       = new QPushButton("Carregar");
+    algorithmsBox = new QComboBox;
+    runBtn        = new QPushButton("Rodar");
+    mainLayout->addWidget(loadBtn);
+    mainLayout->addWidget(algorithmsBox);
     mainLayout->addWidget(runBtn);
 
-    connect( runBtn, SIGNAL(clicked(bool)), this, SLOT(runClicked()) );
+    connect( loadBtn, SIGNAL(clicked(bool)), this, SLOT(loadInstance()) );
+    connect( runBtn,  SIGNAL(clicked(bool)), this, SLOT(runClicked  ()) );
 
+    for (const AlgorithmData &alg : algorithms){
+        algorithmsBox->addItem(QString::fromStdString( alg.name ));
+    }
 }
 
-
-
-void ToolBox::runClicked()
+void ToolBox::loadInstance()
 {
-    this->logPane->clearLog();
-//    this->chartPane->clearChart();
+    std::string file = QFileDialog::getOpenFileName(
+        this,
+        tr("Selecione uma instância"),
+        "instances",
+        tr("Arquivo tsp (*.tsp)")
+    ).toStdString();
+    graphicData->clear();
+    std::vector<Coordinate> tspInstance = getTspInstance( file );
+    printf("Copyied\n");
+    std::copy( tspInstance.begin(), tspInstance.end(), graphicData->begin() );
+    graphicPane->repaint();
+}
 
-    this->chartPane->addStep( 1 );
-    this->chartPane->addStep( 1.5 );
-    this->chartPane->addStep( 2 );
-    this->chartPane->addStep( 3 );
-    this->chartPane->addStep( 4 );
-    this->chartPane->addStep( 5 );
-    this->chartPane->addStep( 3 );
-    this->chartPane->addStep( 2 );
-    this->chartPane->addStep( 1.4 );
-    this->chartPane->addStep( 0.2 );
-    this->chartPane->addStep( 0.1 );
-    this->chartPane->addStep( 0.00001 );
-    this->chartPane->addStep( 10 );
-    this->chartPane->addStep( 1 );
-    this->chartPane->addStep( 1.5 );
-    this->chartPane->addStep( 2 );
-    this->chartPane->addStep( 3 );
-    this->chartPane->addStep( 4 );
-    this->chartPane->addStep( 5 );
-    this->chartPane->addStep( 3 );
-    this->chartPane->addStep( 2 );
-    this->chartPane->addStep( 1.4 );
-    this->chartPane->addStep( 0.2 );
-    this->chartPane->addStep( 0.1 );
-    this->chartPane->addStep( 0.00001 );
-    this->chartPane->addStep( -1 );
-    this->chartPane->addStep( 1 );
-    this->chartPane->addStep( 1.5 );
-    this->chartPane->addStep( 2 );
-    this->chartPane->addStep( 3 );
-    this->chartPane->addStep( 4 );
-    this->chartPane->addStep( 5 );
-    this->chartPane->addStep( 3 );
-    this->chartPane->addStep( 2 );
-    this->chartPane->addStep( 1.4 );
-    this->chartPane->addStep( 0.2 );
-    this->chartPane->addStep( 0.1 );
-    this->chartPane->addStep( 0.00001 );
-    this->chartPane->addStep( -1 );
-    this->chartPane->addStep( 0.2 );
-    this->chartPane->addStep( 0.1 );
-    this->chartPane->addStep( 0.00001 );
-    this->chartPane->addStep( -1 );
-    this->chartPane->addStep( -4 );
-    this->chartPane->addStep( -5 );
-    this->chartPane->addStep( -7 );
-    this->chartPane->addStep( -8 );
-    this->chartPane->addStep( -10 );
-    this->chartPane->addStep( -20 );
-    this->chartPane->addStep( -40 );
-    this->chartPane->addStep( -80 );
+void ToolBox::runClicked(){
+    if (!running){
+        running = true;
+        stopRequested = false;
+        this->logPane->clearLog();
+        this->chartPane->clearChart();
+        proccess = new std::thread( &ToolBox::startThread, this );
+    }
+}
+
+void ToolBox::appendStep(double value){
+    this->chartPane->addStep( value );
+}
+
+void ToolBox::appendLog(QString log){
+    this->logPane->addLog( log.toStdString() );
+}
+
+void ToolBox::startThread()
+{
+    algorithms.at( algorithmsBox->currentIndex() ).run(
+
+        // graphic Data
+        graphicPane->getGraphicData(),
+
+        // initial node
+        0,
+
+        // log
+        [this](std::string log) -> void {
+            QMetaObject::invokeMethod(
+                this, "appendLog",
+                Qt::QueuedConnection,
+                Q_ARG( QString, QString::fromStdString(log) )
+            );
+        },
+
+        // chart data
+        [this](double value) -> void {
+            QMetaObject::invokeMethod(
+                this,
+                "appendStep",
+                Qt::QueuedConnection,
+                Q_ARG( double, value )
+            );
+        },
+
+        // stop requested
+        [this]() -> bool {
+            return stopRequested;
+        },
+
+        // finished
+        [this]() -> void { this->running = false; }
+    );
 }
 
 void ToolBox::setLogPane(LogPane *value)
@@ -84,8 +109,8 @@ void ToolBox::setChartPane(ChartPane *value)
     chartPane = value;
 }
 
-void ToolBox::setRepresentationPane(RepresentationPane *value)
+void ToolBox::setGraphicPane(GraphicPane *value)
 {
-    representationPane = value;
+    graphicPane = value;
 }
 

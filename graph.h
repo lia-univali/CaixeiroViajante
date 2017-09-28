@@ -13,6 +13,7 @@ struct Edge {
 struct Vertice {
     std::string name;
     std::vector<Edge> edges;
+    double x, y;
     Vertice(std::string name)
         : name (name) {}
 };

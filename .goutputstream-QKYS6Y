@@ -8,7 +8,6 @@
 #include <iterator>
 #include <string>
 #include <stdlib.h>
-#include "solution.h"
 
 #include "coordinate.h"
 
@@ -37,11 +36,11 @@ std::vector<Coordinate> getTspInstance(std::string filePath, int numberOfCoordin
     std::vector<Coordinate> coordinates;
     for(int i = 0; i < numberOfCoordinates; i++) {
         std::getline(file, line);
-        if(numberOfCoordinates == INT_MAX || line == "EOF")
+        if(numberOfCoordinates == INT_MAX && line == "EOF")
             break;
         std::vector<std::string> points = split(line, ' ');
-        double x = std::stod(points.at(1));
-        double y = std::stod(points.at(2));
+        double x = atof(points[1].c_str());
+        double y = atof(points[2].c_str());
         coordinates.push_back(Coordinate(x, y));
     }
     return coordinates;

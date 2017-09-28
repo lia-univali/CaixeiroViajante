@@ -11,12 +11,12 @@
 #include <QScrollArea>
 #include <QScrollBar>
 
-#include "representationpane.h"
+#include "graphicpane.h"
 #include "chartpane.h"
 #include "logpane.h"
 #include "toolbox.h"
 
-#include "graph.h"
+#include "graphic.h"
 
 class MainWindow : public QMainWindow
 {
@@ -26,7 +26,11 @@ public:
     MainWindow(QWidget *parent = 0);
     ~MainWindow();
 
+    void start();
     void scrollChartToRight();
+
+protected:
+    void keyReleaseEvent(QKeyEvent *) override;
 
 private:
     QHBoxLayout *mainLayout;
@@ -34,7 +38,7 @@ private:
     QWidget *mainWidget;
     QWidget *rightWidget;
 
-    RepresentationPane *representationPane;
+    GraphicPane *graphPane;
     ChartPane *chartPane;
     LogPane *logPane;
     ToolBox *toolBox;
@@ -42,8 +46,7 @@ private:
     QLabel *chartTitle;
     QScrollArea *chartScroll;
 
-
-    Graph graph;
+    GraphicData graphicData;
 
 };
 

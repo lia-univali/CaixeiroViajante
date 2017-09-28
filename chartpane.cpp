@@ -8,15 +8,14 @@ ChartPane::ChartPane()
 
 void ChartPane::clearChart(){
     steps.clear();
-    this->repaint();
 }
 
 void ChartPane::addStep(double step){
     steps.push_back(step);
-    this->repaint();
     scrollRightFunction();
-}
+    this->repaint();
 
+}
 
 
 void ChartPane::paintEvent(QPaintEvent *)

@@ -8,17 +8,17 @@ MainWindow::MainWindow(QWidget *parent)
     mainWidget = new QWidget;
     rightWidget = new QWidget;
 
-    representationPane = new RepresentationPane(&graph);
+    graphPane = new GraphicPane(&graphicData);
     chartPane = new ChartPane;
     logPane = new LogPane;
-    toolBox = new ToolBox;
+    toolBox = new ToolBox(&graphicData);
 
     chartTitle = new QLabel("Evolução");
     {
         QFont font = chartTitle->font();
         font.setBold(true);
         chartTitle->setFont(font);
-        chartTitle->setStyleSheet("color:black");
+        chartTitle->setStyleSheet("color: black");
     }
 
     chartScroll = new QScrollArea();
@@ -39,7 +39,7 @@ MainWindow::MainWindow(QWidget *parent)
 
     setCentralWidget( mainWidget );
     mainWidget->setLayout( mainLayout );
-    mainLayout->addWidget( representationPane, 1 );
+    mainLayout->addWidget( graphPane, 1 );
     mainLayout->addWidget( rightWidget, 0 );
     rightWidget->setLayout( rightLayout );
     rightLayout->addWidget( toolBox );
@@ -50,18 +50,13 @@ MainWindow::MainWindow(QWidget *parent)
     this->setMinimumSize( 1000, 500 );
     this->setWindowTitle("Caixeiro Viajante");
 
-    toolBox->setRepresentationPane(representationPane);
+    toolBox->setGraphicPane(graphPane);
     toolBox->setChartPane(chartPane);
     toolBox->setLogPane(logPane);
+}
 
-
-    graph.addVertice("a");
-    graph.addVertice("b");
-    graph.addVertice("c");
-    graph.addEdge("a","b",2);
-    graph.addEdge("b","c",3);
-    graph.addEdge("d","a",1);
-    representationPane->repaint();
+void MainWindow::start(){
+    this->show();
 }
 
 MainWindow::~MainWindow()
@@ -70,4 +65,11 @@ MainWindow::~MainWindow()
 void MainWindow::scrollChartToRight()
 {
     chartScroll->horizontalScrollBar()->setValue( chartScroll->horizontalScrollBar()->maximum() );
+}
+
+void MainWindow::keyReleaseEvent(QKeyEvent *e)
+{
+    if ( e->key() == Qt::Key_F5 ){
+//        graphPane->randomizeNodes();
+    }
 }

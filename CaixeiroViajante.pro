@@ -16,13 +16,16 @@ TEMPLATE = app
 SOURCES += main.cpp\
         mainwindow.cpp \
     logpane.cpp \
-    representationpane.cpp \
     chartpane.cpp \
-    toolbox.cpp
+    toolbox.cpp \
+    graphicpane.cpp
 
 HEADERS  += mainwindow.h \
-    representationpane.h \
     chartpane.h \
     logpane.h \
-    graph.h \
-    toolbox.h
+    toolbox.h \
+    setupalgorithms.h \
+    graphicpane.h \
+    coordinate.h \
+    graphic.h \
+    tspreader.h
