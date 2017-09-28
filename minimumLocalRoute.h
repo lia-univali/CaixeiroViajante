@@ -1,9 +1,7 @@
 #ifndef MINIMUMLOCALROUTE_H
 #define MINIMUMLOCALROUTE_H
 
-long double euclidianDistance(Coordinate a, Coordinate b) {
-    return std::sqrt(std::pow(a.x - b.x, 2) + std::pow(a.y - b.y, 2));
-}
+#include "solution.h"
 
 Solution minimumLocalRoute(std::vector<Coordinate> &cities, int startNode) {
     Solution sol;
@@ -35,24 +33,6 @@ Solution minimumLocalRoute(std::vector<Coordinate> &cities, int startNode) {
     Coordinate target = cities.at(startNode);
     sol.distance += euclidianDistance(source, target);
     return sol;
-
-//    Solution currentSol;
-//    currentSol.path.push_back(startCity);
-//    for(int i = 0; i < cities.size(); i++)
-//        if(i != startCity)
-//            currentSol.path.push_back(i);
-//    Solution bestSol;
-//    bool stoppingCriterion = false;
-//    do {
-//        bool improvement = false;
-//        if(currentSol.distance < bestSol.distance) {
-//            bestSol = currentSol;
-//            improvement = true;
-//        }
-//        if(!improvement) {
-//
-//        }
-//    } while(!stoppingCriterion);
 }
 
 #endif // MINIMUMLOCALROUTE_H
