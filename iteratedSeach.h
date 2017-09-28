@@ -1,44 +1,35 @@
-#ifndef ITERATED_SEARCH_H
-#define #ITERATED_SEARCH_H
+#ifndef ITERATEDSEARCH_H
+#define ITERATEDSEARCH_H
 
-#include "graph.h"
-#include "solution.h"
+struct Solution {
+    std::vector<int> path;
+    long double distance = INT_MAX;
+};
 
-bool isHamiltonianCicle(Graph &graph, std::vector<int> &path) {
+long double getPathDistance(std::vector<Coordinate> &cities, std::vector<int> &path) {
+    double distance = 0;
     for(int i = 0; i < path.size(); i++) {
-        int source = path.at(i);
-        int target = path.at(path.size() % (i + 1));
-        if(!graph.isConnected(source, target))
-            return false;
+        Coordinate a = cities.at(path.at(i));
+        Coordinate b = cities.at( (i + 1 < path.size()) ? path.at(i + 1) : path.at(0));
+        distance += std::sqrt(std::pow(a.x - b.x, 2) + std::pow(a.y - b.y, 2));
     }
-    return true;
+    return distance;
 }
 
-Solution iteratedSearch(Graph &graph, std::string &startNode) {
+Solution iteratedSearch(std::vector<Coordinate> cities, int startNode) {
     Solution currentSol;
-    int numberOfNodes = graph.vertices.size();
-    for(int i = graph.getIndexOfVertice(startNode); currentSol.path.size() != numberOfNodes; i++)
-        currentSol.path.push_back((i > numberOfNodes) ? numberOfNodes % i : i);
+    currentSol.path.push_back(startCity);
+    for(int i = 0; i < cities.size(); i++)
+        if(i != startCity)
+            currentSol.path.push_back(i);
 
-    Solution bestSol = currentSol;
+    Solution bestSol;
     bool stoppingCriterion = false;
-    bool improvement;
     do {
-        improvement = false;
-        for(int i = 1; i < path.size() - 1; i++) {
-            Sol neighbor;
-            neighbor.path = currentSol.path;
-            std::swap(neighbor.path.at(i), neighbor.path.at(i + 1));
-            neighbor.distance = getPathWeight(sol.path, graph);
-            if(neighbor.distance < currentSol.distance) {
-                currentSol = neighbor;
-                improvement = true;
-            }
+        if(currentSol.distance < bestSol.distance) {
+            bestSol = currentSol;
         }
-        if(!improvement) {
-            // perturbar solução
-        }
-    } while(stoppingCriterion != false);
+    } while(!stoppingCriterion);
 }
 
-#endif // ITERATED_SEARCH_H
+#endif // ITERATEDSEARCH_H
