@@ -26,4 +26,8 @@ long double getPathDistance(std::vector<Coordinate> &cities, std::vector<int> &p
     return distance;
 }
 
+long double euclidianDistance(Coordinate a, Coordinate b) {
+    return std::sqrt(std::pow(a.x - b.x, 2) + std::pow(a.y - b.y, 2));
+}
+
 #endif // SOLUTION_H
