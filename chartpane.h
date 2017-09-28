@@ -6,8 +6,6 @@
 #include <functional>
 
 #include <QWidget>
-#include <QVBoxLayout>
-#include <QLabel>
 #include <QPainter>
 #include <QScrollArea>
 
@@ -24,14 +22,9 @@ protected:
 
 private:
     std::function<void()> scrollRightFunction;
-
-    QVBoxLayout *mainLayout;
-    QLabel *title;
-    QWidget *chart;
-
     std::list<double> steps;
 
-    const double stepDistance = 15;
+    const double stepDistance = 5;
 
 };
 

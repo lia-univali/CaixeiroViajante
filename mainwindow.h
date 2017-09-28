@@ -39,6 +39,7 @@ private:
     LogPane *logPane;
     ToolBox *toolBox;
 
+    QLabel *chartTitle;
     QScrollArea *chartScroll;
 
 

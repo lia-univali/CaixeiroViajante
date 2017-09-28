@@ -40,7 +40,6 @@ void LogPane::clearLog(){
     logs->setPlainText("");
 }
 
-
 void LogPane::addLog(std::string str){
     str += "\n";
     logs->insertPlainText( QString::fromStdString(str) );

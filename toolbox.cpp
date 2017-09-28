@@ -19,7 +19,7 @@ ToolBox::ToolBox(QWidget *parent) : QWidget(parent)
 void ToolBox::runClicked()
 {
     this->logPane->clearLog();
-    this->chartPane->clearChart();
+//    this->chartPane->clearChart();
 
     this->chartPane->addStep( 1 );
     this->chartPane->addStep( 1.5 );
@@ -64,6 +64,14 @@ void ToolBox::runClicked()
     this->chartPane->addStep( 0.1 );
     this->chartPane->addStep( 0.00001 );
     this->chartPane->addStep( -1 );
+    this->chartPane->addStep( -4 );
+    this->chartPane->addStep( -5 );
+    this->chartPane->addStep( -7 );
+    this->chartPane->addStep( -8 );
+    this->chartPane->addStep( -10 );
+    this->chartPane->addStep( -20 );
+    this->chartPane->addStep( -40 );
+    this->chartPane->addStep( -80 );
 }
 
 void ToolBox::setLogPane(LogPane *value)

@@ -13,6 +13,14 @@ MainWindow::MainWindow(QWidget *parent)
     logPane = new LogPane;
     toolBox = new ToolBox;
 
+    chartTitle = new QLabel("Evolução");
+    {
+        QFont font = chartTitle->font();
+        font.setBold(true);
+        chartTitle->setFont(font);
+        chartTitle->setStyleSheet("color:black");
+    }
+
     chartScroll = new QScrollArea();
     chartScroll->setWidget(chartPane);
     chartScroll->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
@@ -23,7 +31,6 @@ MainWindow::MainWindow(QWidget *parent)
     chartScroll->setFrameShape(QFrame::NoFrame);
     chartScroll->setSizePolicy(QSizePolicy::Expanding,QSizePolicy::Fixed);
     chartPane->setScrollRightFunction( std::bind(&MainWindow::scrollChartToRight, this) );
-
 
     mainLayout->setMargin(5);
     mainLayout->setSpacing(5);
@@ -36,6 +43,7 @@ MainWindow::MainWindow(QWidget *parent)
     mainLayout->addWidget( rightWidget, 0 );
     rightWidget->setLayout( rightLayout );
     rightLayout->addWidget( toolBox );
+    rightLayout->addWidget( chartTitle );
     rightLayout->addWidget( chartScroll );
     rightLayout->addWidget( logPane );
 
@@ -45,13 +53,19 @@ MainWindow::MainWindow(QWidget *parent)
     toolBox->setRepresentationPane(representationPane);
     toolBox->setChartPane(chartPane);
     toolBox->setLogPane(logPane);
+
+
+    graph.addVertice("a");
+    graph.addVertice("b");
+    graph.addVertice("c");
+    graph.addEdge("a","b",2);
+    graph.addEdge("b","c",3);
+    graph.addEdge("d","a",1);
+    representationPane->repaint();
 }
-
-
 
 MainWindow::~MainWindow()
-{
-}
+{}
 
 void MainWindow::scrollChartToRight()
 {

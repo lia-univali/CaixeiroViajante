@@ -2,20 +2,8 @@
 
 ChartPane::ChartPane()
 {
-    setFixedHeight(250);
+    setFixedHeight(220);
     setFixedWidth(400);
-
-    mainLayout = new QVBoxLayout;
-    this->setLayout(mainLayout);
-
-    title = new QLabel("Evolução");
-    title->setStyleSheet("color: black; font-weight: bold;");
-
-
-    chart = new QWidget;
-
-    mainLayout->addWidget( title, 0 );
-    mainLayout->addWidget( chart, 1 );
 }
 
 void ChartPane::clearChart(){
@@ -35,9 +23,9 @@ void ChartPane::paintEvent(QPaintEvent *)
 {
     QPainter painter(this);
     painter.setBrush(QBrush(QColor("white")));
-    painter.fillRect( 0, 30, width()-1, height()-31, Qt::SolidPattern );
+    painter.fillRect( 0, 0, width()-1, height()-1, Qt::SolidPattern );
     painter.setPen(QColor("black"));
-    painter.drawRect( 0, 30, width()-1, height()-31 );
+    painter.drawRect( 0, 0, width()-1, height()-1 );
 
     painter.setRenderHint(QPainter::Antialiasing);
 
@@ -63,22 +51,22 @@ void ChartPane::paintEvent(QPaintEvent *)
                 }
             }
         }
-        double scale = ((double) height() * 0.8) / (max-min);
-        double offset = (double) height() * 0.1;
+        double scale = ((double) height()*0.8) / (max-min);
+        double offset = height() * 0.1;
         double x = 10;
 
         painter.drawLine(
-            QPoint(0,       (double) height()-offset),
-            QPoint(width(), (double) height()-offset)
+            QPoint(0,       height() - ((-min) * scale) - offset ),
+            QPoint(width(), height() - ((-min) * scale) - offset )
         );
 
         bool first = true;
         double prevX, prevY;
         for (const double &step : steps){
-            double y = ( height() - (step * scale) ) - offset;
+            double y = ( height() - ((step-min) * scale) ) - offset;
             painter.setBrush(QBrush(QColor("black")));
-            painter.drawText( QPointF( x-5, y-5 ), QString::fromStdString(std::to_string((int) step)) );
-            painter.drawEllipse( QPointF(x,y), 2, 2 );
+//            painter.drawText( QPointF( x-5, y-5 ), QString::fromStdString(std::to_string((int) step)) );
+            painter.drawEllipse( QPointF(x,y), 1, 1 );
             if ( first ){
                 prevX = x;
                 prevY = y;
@@ -97,33 +85,3 @@ void ChartPane::setScrollRightFunction(const std::function<void()> &value)
 {
     scrollRightFunction = value;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
