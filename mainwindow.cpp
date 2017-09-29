@@ -11,7 +11,7 @@ MainWindow::MainWindow(QWidget *parent)
     graphPane = new GraphicPane(&graphicData);
     chartPane = new ChartPane;
     logPane = new LogPane;
-    toolBox = new ToolBox(&graphicData);
+    toolBox = new ToolBox;
 
     chartTitle = new QLabel("Evolução");
     {
@@ -30,7 +30,13 @@ MainWindow::MainWindow(QWidget *parent)
     chartScroll->setWidgetResizable(true);
     chartScroll->setFrameShape(QFrame::NoFrame);
     chartScroll->setSizePolicy(QSizePolicy::Expanding,QSizePolicy::Fixed);
-    chartPane->setScrollRightFunction( std::bind(&MainWindow::scrollChartToRight, this) );
+    chartPane->setScrollRightFunction([this](int newWidth){
+        QScrollBar *sb = chartScroll->horizontalScrollBar();
+        if ( sb->value() == sb->maximum() ){
+            chartPane->setFixedWidth( newWidth );
+            sb->setValue( sb->maximum() );
+        }
+    });
 
     mainLayout->setMargin(5);
     mainLayout->setSpacing(5);
@@ -61,11 +67,6 @@ void MainWindow::start(){
 
 MainWindow::~MainWindow()
 {}
-
-void MainWindow::scrollChartToRight()
-{
-    chartScroll->horizontalScrollBar()->setValue( chartScroll->horizontalScrollBar()->maximum() );
-}
 
 void MainWindow::keyReleaseEvent(QKeyEvent *e)
 {

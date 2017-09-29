@@ -16,17 +16,20 @@ TEMPLATE = app
 SOURCES += main.cpp\
         mainwindow.cpp \
     logpane.cpp \
-    chartpane.cpp \
     toolbox.cpp \
     graphicpane.cpp \
-    solution.cpp
+    solution.cpp \
+    chartpane.cpp
 
 HEADERS  += mainwindow.h \
-    chartpane.h \
     logpane.h \
     toolbox.h \
     setupalgorithms.h \
     graphicpane.h \
     graphic.h \
     tspreader.h \
-    solution.h
+    solution.h \
+    bruteforce.h \
+    minimumLocalRoute.h \
+    iteratedSearch.h \
+    chartpane.h

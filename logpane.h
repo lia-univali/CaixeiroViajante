@@ -7,6 +7,7 @@
 #include <QLabel>
 #include <QPushButton>
 #include <QTextEdit>
+#include <QScrollBar>
 
 class LogPane : public QWidget
 {

@@ -1,9 +1,17 @@
 #include "chartpane.h"
 
-ChartPane::ChartPane()
+ChartPane::ChartPane(QWidget *parent) : QWidget(parent)
 {
     setFixedHeight(220);
     setFixedWidth(400);
+    QTimer *fpsTimer = new QTimer();
+    QObject::connect(fpsTimer, SIGNAL(timeout()), this, SLOT(callRepaint()));
+    fpsTimer->start( 50 );
+}
+
+int i = 0;
+void ChartPane::callRepaint(){
+    this->repaint();
 }
 
 void ChartPane::clearChart(){
@@ -12,11 +20,7 @@ void ChartPane::clearChart(){
 
 void ChartPane::addStep(double step){
     steps.push_back(step);
-    scrollRightFunction();
-    this->repaint();
-
 }
-
 
 void ChartPane::paintEvent(QPaintEvent *)
 {
@@ -41,7 +45,7 @@ void ChartPane::paintEvent(QPaintEvent *)
 
     painter.setRenderHint(QPainter::Antialiasing);
 
-    this->setFixedWidth(std::max(400, (int) (20 + steps.size() * stepDistance) ));
+    resizeFunction( std::max(400, (int) (20 + steps.size() * stepDistance) ) );
 
     if ( steps.size() >= 2 ){
 
@@ -111,7 +115,7 @@ void ChartPane::paintEvent(QPaintEvent *)
     }
 }
 
-void ChartPane::setScrollRightFunction(const std::function<void()> &value)
+void ChartPane::setScrollRightFunction(const std::function<void(int)> &value)
 {
-    scrollRightFunction = value;
+    resizeFunction = value;
 }

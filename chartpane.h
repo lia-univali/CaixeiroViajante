@@ -13,25 +13,28 @@
 
 class ChartPane : public QWidget
 {
+    Q_OBJECT
 public:
-    ChartPane();
+    explicit ChartPane(QWidget *parent = 0);
     void clearChart();
     void addStep(double step);
-    void setScrollRightFunction(const std::function<void()> &value);
+    void setScrollRightFunction(const std::function<void(int)> &value);
+
+signals:
 
 public slots:
-    void update();
+    void callRepaint();
 
 protected:
     void paintEvent(QPaintEvent*) override;
 
 private:
-    std::function<void()> scrollRightFunction;
+    std::function<void(int)> resizeFunction;
     std::list<double> steps;
 
     const double lineWidth = 1.5;
-    const double pointRadius = 2.5;
-    const double stepDistance = 7.0;
+    const double pointRadius = 2.0;
+    const double stepDistance = 8.5;
 };
 
 #endif // CHART_H

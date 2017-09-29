@@ -3,7 +3,7 @@
 #include "setupalgorithms.h"
 #include "tspreader.h"
 
-ToolBox::ToolBox(GraphicData *graphicData, QWidget *parent) : QWidget(parent), graphicData(graphicData)
+ToolBox::ToolBox(QWidget *parent) : QWidget(parent)
 {
     setupAlgorithms(algorithms);
 
@@ -43,14 +43,10 @@ void ToolBox::loadInstance()
     if (file.empty()){
         return;
     }
-    graphicData->clear();
-    printf("file: %s\n", file.c_str());
+    graphicPane->getGraphicData().clear();
     std::vector<Coordinate> tspInstance = getTspInstance( file );
-    printf("Loaded\n");
-    std::copy( tspInstance.begin(), tspInstance.end(), graphicData->begin() );
-    printf("Copied\n");
-    graphicPane->repaint();
-    printf("Repaint\n");
+    std::copy( tspInstance.begin(), tspInstance.end(), std::back_inserter(graphicPane->getGraphicData()) );
+    graphicPane->reload();
 }
 
 void ToolBox::stopClicked(){
@@ -82,6 +78,7 @@ void ToolBox::appendLog(QString log){
 
 void ToolBox::startThread()
 {
+    auto last = std::chrono::system_clock::now();
     algorithms.at( algorithmsBox->currentIndex() ).run(
 
         // graphic Data
@@ -100,13 +97,18 @@ void ToolBox::startThread()
         },
 
         // chart data
-        [this](double value) -> void {
+        [this,&last](double value) -> void {
             QMetaObject::invokeMethod(
                 this,
                 "appendStep",
                 Qt::QueuedConnection,
                 Q_ARG( double, value )
             );
+            auto now = std::chrono::system_clock::now();
+            if ( now-last < std::chrono::milliseconds(1) ){
+                std::this_thread::sleep_for(std::chrono::milliseconds(1));
+            }
+            last = std::chrono::system_clock::now();
         },
 
         // stop requested

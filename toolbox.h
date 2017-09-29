@@ -19,7 +19,7 @@ class ToolBox : public QWidget
 {
     Q_OBJECT
 public:
-    explicit ToolBox(GraphicData *graphicData, QWidget *parent = 0);
+    explicit ToolBox(QWidget *parent = 0);
 
     void setGraphicPane(GraphicPane *value);
     void setChartPane(ChartPane *value);
@@ -49,8 +49,6 @@ public slots:
     void appendLog(QString);
 
 private:
-    GraphicData *graphicData;
-
     GraphicPane *graphicPane;
     ChartPane *chartPane;
     LogPane *logPane;

@@ -27,7 +27,6 @@ public:
     ~MainWindow();
 
     void start();
-    void scrollChartToRight();
 
 protected:
     void keyReleaseEvent(QKeyEvent *) override;

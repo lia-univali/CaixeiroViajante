@@ -41,10 +41,15 @@ void LogPane::clearLog(){
 }
 
 void LogPane::addLog(std::string str){
+    QScrollBar *sb = logs->verticalScrollBar();
+    bool change = ( sb->value() == sb->maximum() );
     str += "\n";
     logs->insertPlainText( QString::fromStdString(str) );
-    QTextCursor textCursor = logs->textCursor();
-    textCursor.movePosition(QTextCursor::End);
-    logs->setTextCursor(textCursor);
+    if (change){
+        sb->setValue( sb->maximum() );
+    }
+//    QTextCursor textCursor = logs->textCursor();
+//    textCursor.movePosition(QTextCursor::End);
+//    logs->setTextCursor(textCursor);
 }
 

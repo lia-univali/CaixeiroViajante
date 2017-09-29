@@ -16,6 +16,7 @@ public:
     explicit GraphicPane(GraphicData *coordinates, QWidget *parent = 0);
 
     GraphicData & getGraphicData() const;
+    void reload();
 
 signals:
 
@@ -28,8 +29,12 @@ protected:
     void mouseMoveEvent(QMouseEvent *);
 
 private:
+    bool doRepaint = true;
+    int lastWidth = 0, lastHeight = 0;
+    QRegion lastRegion;
+
     GraphicData *coordinates = NULL;
-    const int nodeRadius = 15;
+    const int nodeRadius = 1.5;
 
     QPointF mousePos;
     int *selected = NULL;
