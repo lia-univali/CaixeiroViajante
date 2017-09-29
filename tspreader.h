@@ -10,7 +10,7 @@
 #include <stdlib.h>
 #include "solution.h"
 
-#include "coordinate.h"
+#include "solution.h"
 
 template<typename Out>
 void split(const std::string &s, char delim, Out result) {
@@ -28,14 +28,22 @@ std::vector<std::string> split(const std::string &s, char delim) {
     return elems;
 }
 
+#include <iostream>
 std::vector<Coordinate> getTspInstance(std::string filePath, int numberOfCoordinates = INT_MAX) {
+
+    printf("Opening\n");
     std::ifstream file(filePath);
     std::string line;
-    while(line != "NODE_COORD_SECTION")
+    do {
         std::getline(file, line);
+        std::cout << "line [" << line.compare("NODE_COORD_SECTION") << "]: '" << line << "'" << std::endl;
+        std::getchar();
+    } while(line.compare("NODE_COORD_SECTION") != 0);
 
+    printf("Started\n");
     std::vector<Coordinate> coordinates;
     for(int i = 0; i < numberOfCoordinates; i++) {
+        printf("Loading %d\n",i);
         std::getline(file, line);
         if(numberOfCoordinates == INT_MAX || line == "EOF")
             break;

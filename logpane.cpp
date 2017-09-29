@@ -29,7 +29,7 @@ LogPane::LogPane(QWidget *parent) : QWidget(parent)
     palette.setColor(QPalette::Highlight, QColor("white"));
     palette.setColor(QPalette::HighlightedText, QColor("black"));
     logs->setPalette(palette);
-    logs->setReadOnly(true);
+    logs->setTextInteractionFlags(Qt::NoTextInteraction);
 
     mainLayout->addWidget( titleWidget, 0 );
     mainLayout->addWidget( logs, 1 );

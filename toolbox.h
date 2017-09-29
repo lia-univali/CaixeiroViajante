@@ -43,6 +43,7 @@ signals:
 
 public slots:
     void loadInstance();
+    void stopClicked();
     void runClicked();
     void appendStep(double);
     void appendLog(QString);
@@ -57,6 +58,7 @@ private:
     QHBoxLayout *mainLayout;
     QPushButton *loadBtn;
     QComboBox *algorithmsBox;
+    QPushButton *stopBtn;
     QPushButton *runBtn;
 
     std::vector<AlgorithmData> algorithms;

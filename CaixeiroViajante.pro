@@ -18,7 +18,8 @@ SOURCES += main.cpp\
     logpane.cpp \
     chartpane.cpp \
     toolbox.cpp \
-    graphicpane.cpp
+    graphicpane.cpp \
+    solution.cpp
 
 HEADERS  += mainwindow.h \
     chartpane.h \
@@ -26,6 +27,6 @@ HEADERS  += mainwindow.h \
     toolbox.h \
     setupalgorithms.h \
     graphicpane.h \
-    coordinate.h \
     graphic.h \
-    tspreader.h
+    tspreader.h \
+    solution.h

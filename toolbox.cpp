@@ -14,12 +14,17 @@ ToolBox::ToolBox(GraphicData *graphicData, QWidget *parent) : QWidget(parent), g
 
     loadBtn       = new QPushButton("Carregar");
     algorithmsBox = new QComboBox;
+    stopBtn       = new QPushButton("Parar");
     runBtn        = new QPushButton("Rodar");
     mainLayout->addWidget(loadBtn);
     mainLayout->addWidget(algorithmsBox);
+    mainLayout->addWidget(stopBtn);
     mainLayout->addWidget(runBtn);
 
+    stopBtn->setEnabled(false);
+
     connect( loadBtn, SIGNAL(clicked(bool)), this, SLOT(loadInstance()) );
+    connect( stopBtn, SIGNAL(clicked(bool)), this, SLOT(stopClicked ()) );
     connect( runBtn,  SIGNAL(clicked(bool)), this, SLOT(runClicked  ()) );
 
     for (const AlgorithmData &alg : algorithms){
@@ -35,15 +40,30 @@ void ToolBox::loadInstance()
         "instances",
         tr("Arquivo tsp (*.tsp)")
     ).toStdString();
+    if (file.empty()){
+        return;
+    }
     graphicData->clear();
+    printf("file: %s\n", file.c_str());
     std::vector<Coordinate> tspInstance = getTspInstance( file );
-    printf("Copyied\n");
+    printf("Loaded\n");
     std::copy( tspInstance.begin(), tspInstance.end(), graphicData->begin() );
+    printf("Copied\n");
     graphicPane->repaint();
+    printf("Repaint\n");
+}
+
+void ToolBox::stopClicked(){
+    if (running){
+        stopBtn->setEnabled(false);
+        stopRequested = true;
+    }
 }
 
 void ToolBox::runClicked(){
     if (!running){
+        runBtn->setEnabled(false);
+        stopBtn->setEnabled(true);
         running = true;
         stopRequested = false;
         this->logPane->clearLog();
@@ -95,7 +115,11 @@ void ToolBox::startThread()
         },
 
         // finished
-        [this]() -> void { this->running = false; }
+        [this]() -> void {
+            this->running = false;
+            runBtn->setEnabled(true);
+            stopBtn->setEnabled(false);
+        }
     );
 }
 

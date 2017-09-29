@@ -21,8 +21,21 @@ void ChartPane::addStep(double step){
 void ChartPane::paintEvent(QPaintEvent *)
 {
     QPainter painter(this);
+
+    // white background
     painter.setBrush(QBrush(QColor("white")));
     painter.fillRect( 0, 0, width()-1, height()-1, Qt::SolidPattern );
+
+    // fill
+    painter.setBrush(Qt::NoBrush);
+    QRect background( 0,0, width(),height() );
+    QLinearGradient gradient( background.topLeft(), background.bottomLeft() );
+    gradient.setColorAt(0.0, QColor(255,120,120));
+    gradient.setColorAt(0.5, QColor(210,210,100));
+    gradient.setColorAt(1.0, QColor(120,255,120));
+    painter.fillRect(background, gradient);
+
+    // border
     painter.setPen(QColor("black"));
     painter.drawRect( 0, 0, width()-1, height()-1 );
 
@@ -54,10 +67,28 @@ void ChartPane::paintEvent(QPaintEvent *)
         double offset = height() * 0.1;
         double x = 10;
 
+        // 0
+        painter.setPen( QPen(QBrush(QColor("gray")),2.0) );
         painter.drawLine(
-            QPoint(0,       height() - ((-min) * scale) - offset ),
-            QPoint(width(), height() - ((-min) * scale) - offset )
+            QPoint( 0,       height() - ((-min) * scale) - offset ),
+            QPoint( width(), height() - ((-min) * scale) - offset )
         );
+
+        // max
+        painter.setPen( QPen(QBrush(QColor("red")),1.5) );
+        painter.drawLine(
+            QPointF( 0,         height() - ((max-min) * scale) - offset ),
+            QPointF( width()-1, height() - ((max-min) * scale) - offset)
+        );
+        // min
+        painter.setPen( QPen(QBrush(QColor("green")),1.5) );
+        painter.drawLine(
+            QPointF( 0,         height() - offset ),
+            QPointF( width()-1, height() - offset)
+        );
+
+        // steps
+        painter.setPen( QPen(QBrush(QColor("black")), lineWidth) );
 
         bool first = true;
         double prevX, prevY;
@@ -65,7 +96,7 @@ void ChartPane::paintEvent(QPaintEvent *)
             double y = ( height() - ((step-min) * scale) ) - offset;
             painter.setBrush(QBrush(QColor("black")));
 //            painter.drawText( QPointF( x-5, y-5 ), QString::fromStdString(std::to_string((int) step)) );
-            painter.drawEllipse( QPointF(x,y), 1, 1 );
+            painter.drawEllipse( QPointF(x,y), pointRadius, pointRadius );
             if ( first ){
                 prevX = x;
                 prevY = y;

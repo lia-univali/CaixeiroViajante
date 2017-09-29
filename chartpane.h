@@ -9,6 +9,7 @@
 #include <QPainter>
 #include <QScrollArea>
 #include <QTimer>
+#include <QLinearGradient>
 
 class ChartPane : public QWidget
 {
@@ -28,7 +29,9 @@ private:
     std::function<void()> scrollRightFunction;
     std::list<double> steps;
 
-    const double stepDistance = 3;
+    const double lineWidth = 1.5;
+    const double pointRadius = 2.5;
+    const double stepDistance = 7.0;
 };
 
 #endif // CHART_H
