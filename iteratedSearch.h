@@ -158,7 +158,7 @@ Solution iteratedSearch(std::vector<Coordinate> &cities, std::vector<int> startP
                 break;
             }
             randomDisturb(bestLocalSol.path, disturbanceFactor);
-            bestLocalSol.distance = getPathDistance(cities, currentSol.path);
+            bestLocalSol.distance = getPathDistance(cities, bestLocalSol.path);
             currentSol = bestLocalSol;
             log( "Recalculando rota aletoriamente..." );
 //            rouleteDisturb(cities, bestSol);
