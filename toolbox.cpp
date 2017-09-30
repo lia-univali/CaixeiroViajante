@@ -5,6 +5,8 @@
 
 ToolBox::ToolBox(QWidget *parent) : QWidget(parent)
 {
+    qRegisterMetaType<Solution>("Solution");
+
     setupAlgorithms(algorithms);
 
     mainLayout = new QHBoxLayout;
@@ -76,6 +78,11 @@ void ToolBox::appendLog(QString log){
     this->logPane->addLog( log.toStdString() );
 }
 
+void ToolBox::setSolution(const Solution &s)
+{
+    this->graphicPane->setSolution(s);
+}
+
 void ToolBox::startThread()
 {
     auto last = std::chrono::system_clock::now();
@@ -86,6 +93,15 @@ void ToolBox::startThread()
 
         // initial node
         0,
+
+        // set solution
+        [this](const Solution &s) -> void {
+            QMetaObject::invokeMethod(
+                this, "setSolution",
+                Qt::QueuedConnection,
+                Q_ARG( Solution, s )
+            );
+        },
 
         // log
         [this](std::string log) -> void {

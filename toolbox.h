@@ -30,11 +30,12 @@ public:
         std::function<
             void(
                 GraphicData&,
-                int,                              // initial node
-                std::function<void(std::string)>, // log
-                std::function<void(double)>,      // chart data
-                std::function<bool()>,            // if stop requested
-                std::function<void()>             // on finish
+                int,                                  // initial node
+                std::function<void(const Solution&)>, // set solution
+                std::function<void(std::string)>,     // log
+                std::function<void(double)>,          // chart data
+                std::function<bool()>,                // if stop requested
+                std::function<void()>                 // on finish
             )
         > run;
     };
@@ -47,6 +48,7 @@ public slots:
     void runClicked();
     void appendStep(double);
     void appendLog(QString);
+    void setSolution(const Solution&);
 
 private:
     GraphicPane *graphicPane;

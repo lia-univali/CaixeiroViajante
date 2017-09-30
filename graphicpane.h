@@ -6,8 +6,10 @@
 #include <QWidget>
 #include <QPainter>
 #include <QKeyEvent>
+#include <QTimer>
 
 #include "graphic.h"
+#include "solution.h"
 
 class GraphicPane : public QWidget
 {
@@ -18,9 +20,12 @@ public:
     GraphicData & getGraphicData() const;
     void reload();
 
+    void setSolution(const Solution &);
+
 signals:
 
 public slots:
+    void callRepaint();
 
 protected:
     void paintEvent(QPaintEvent *) override;
@@ -34,6 +39,7 @@ private:
     QRegion lastRegion;
 
     GraphicData *coordinates = NULL;
+    Solution solution;
     const int nodeRadius = 1.5;
 
     QPointF mousePos;

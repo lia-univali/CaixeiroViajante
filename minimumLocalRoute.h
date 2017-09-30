@@ -4,6 +4,7 @@
 #include "solution.h"
 
 Solution minimumLocalRoute(std::vector<Coordinate> &cities, int startNode,
+                           std::function<void(const Solution&)> setSolution,
                            std::function<void(std::string)> log,
                            std::function<void(double)> chartLog,
                            std::function<bool()> stopRequested ) {
@@ -38,12 +39,13 @@ Solution minimumLocalRoute(std::vector<Coordinate> &cities, int startNode,
         double seconds = std::chrono::duration<double>(now-start).count();
         log( "[ "+ std::to_string(seconds) +" segundos ] Distância construída: " + std::to_string(sol.distance) );
         chartLog( sol.distance );
+        setSolution( sol );
 
     } while(closedSet.size() > 0 && !stopRequested());
     Coordinate source = cities.at(sol.path.back());
     Coordinate target = cities.at(startNode);
     sol.distance += euclidianDistance(source, target);
-    log( "Melhor distância encontrada: " + std::to_string(sol.distance) );
+    log( "Distância final: " + std::to_string(sol.distance) );
     return sol;
 }
 

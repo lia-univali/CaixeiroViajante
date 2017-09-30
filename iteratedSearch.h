@@ -75,6 +75,7 @@ void rouleteDisturb(std::vector<Coordinate> &coordinates, Solution &sol) {
 }
 
 Solution iteratedSearch(std::vector<Coordinate> &cities, std::vector<int> startPath, int maxIt, int disturbanceFactor = 2,
+                        std::function<void(const Solution&)> setSolution = nullptr,
                         std::function<void(std::string)> log = nullptr,
                         std::function<void(double)> chartLog = nullptr,
                         std::function<bool()> stopRequested = nullptr ) {
@@ -118,17 +119,17 @@ Solution iteratedSearch(std::vector<Coordinate> &cities, std::vector<int> startP
 //            rouleteDisturb(cities, bestSol);
         }
 
-
+        setSolution( currentSol );
         chartLog( currentSol.distance );
 
         it++;
     } while ( it < maxIt && !stopRequested() );
     log( "Melhor distância encontrada: " + std::to_string(bestGlobalSol.distance) );
-
     return bestGlobalSol;
 }
 
 Solution iteratedSearch(std::vector<Coordinate> &coordinates, int maxIt, int disturbanceFactor = 2,
+                        std::function<void(const Solution&)> setSolution = nullptr,
                         std::function<void(std::string)> log = nullptr,
                         std::function<void(double)> chartLog = nullptr,
                         std::function<bool()> stopRequested = nullptr
@@ -137,7 +138,7 @@ Solution iteratedSearch(std::vector<Coordinate> &coordinates, int maxIt, int dis
     for(int i = 0; i < coordinates.size(); i++)
         path.push_back(i);
     std::random_shuffle( path.begin(), path.end() );
-    return iteratedSearch(coordinates, path, maxIt, disturbanceFactor, log, chartLog, stopRequested );
+    return iteratedSearch(coordinates, path, maxIt, disturbanceFactor, setSolution, log, chartLog, stopRequested );
 }
 
 #endif // ITERATEDSEARCH_H

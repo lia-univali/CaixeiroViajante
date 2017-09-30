@@ -4,6 +4,13 @@ GraphicPane::GraphicPane(GraphicData *graphicData, QWidget *parent) : QWidget(pa
 {
     setMouseTracking(true);
     setAutoFillBackground(false);
+    QTimer *fpsTimer = new QTimer();
+    QObject::connect(fpsTimer, SIGNAL(timeout()), this, SLOT(callRepaint()));
+    fpsTimer->start( 50 );
+}
+
+void GraphicPane::callRepaint(){
+    this->repaint();
 }
 
 void GraphicPane::paintEvent(QPaintEvent *)
@@ -24,18 +31,6 @@ void GraphicPane::paintEvent(QPaintEvent *)
     font.setBold(true);
     painter.setFont(font);
     painter.drawText( 4, 14, "Representação Gráfica" );
-
-    // path
-//    painter.setPen(QPen(QBrush(QColor("black")), 2.0));
-//    for (Vertice &v1 : graphicData->vertices){
-//        for (Edge &edge : v1.edges){
-//            if ( edge.source == graphicData->getIndexOfVertice(v1.name) ){
-//                Vertice &v2 = graphicData->vertices.at(edge.target);
-//                painter.drawLine( QPointF( v1.x, v1.y ), QPointF( v2.x, v2.y ) );
-//            }
-//        }
-//    }
-
 
     if ( coordinates->size() > 0 ){
         double minX, maxX;
@@ -60,10 +55,44 @@ void GraphicPane::paintEvent(QPaintEvent *)
         double offsetX = (W-scale*(maxX-minX)) / 2.0;
         double offsetY = -20 + (H-scale*(maxY-minY)) / 2.0;
 
+        auto toX = [&](double x) -> double {
+            return W - (x-minX) * scale - offsetX;
+        };
+        auto toY = [&](double y) -> double {
+            return H - (y-minY) * scale - offsetY;
+        };
+
+//        for (Vertice &v1 : graphicData->vertices){
+//            for (Edge &edge : v1.edges){
+//                if ( edge.source == graphicData->getIndexOfVertice(v1.name) ){
+//                    Vertice &v2 = graphicData->vertices.at(edge.target);
+//                    painter.drawLine( QPointF( v1.x, v1.y ), QPointF( v2.x, v2.y ) );
+//                }
+//            }
+//        }
+
+
+        // path
+        {
+            painter.setPen(QPen(QBrush(QColor(255,0,0,50)), 1.5));
+            Coordinate *prev = NULL;
+            for (int i : solution.path){
+                Coordinate *curr = &coordinates->at(i);
+                if ( prev != NULL ){
+                    painter.drawLine(
+                        QPointF( toX(prev->x), toY(prev->y) ),
+                        QPointF( toX(curr->x), toY(curr->y) )
+                    );
+                }
+                prev = curr;
+            }
+        }
+
+        // all points
         painter.setBrush(QBrush(QColor(0,120,0)));
         for (Coordinate &c : *coordinates){
-            double x = W - (c.x-minX) * scale - offsetX;
-            double y = H - (c.y-minY) * scale - offsetY;
+            double x = toX( c.x );
+            double y = toY( c.y );
 //            if ( selected != NULL ){
 //                if ( c.x == coordinates->at(*selected).x
 //                  && c.y == coordinates->at(*selected).y ){
@@ -114,6 +143,11 @@ void GraphicPane::mouseMoveEvent(QMouseEvent *e){
 //        }
 //    }
 //    this->repaint();
+}
+
+void GraphicPane::setSolution(const Solution &s)
+{
+    this->solution = s;
 }
 
 GraphicData & GraphicPane::getGraphicData() const

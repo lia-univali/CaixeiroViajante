@@ -5,8 +5,8 @@
 #-------------------------------------------------
 
 QT       += core gui
-CONFIG   += c++11
-
+CONFIG   += console c++11
+CONFIG   += bundle
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 TARGET = CaixeiroViajante

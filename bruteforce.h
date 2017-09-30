@@ -11,6 +11,7 @@
 #include <thread>
 
 Solution bruteForceSearch(std::vector<Coordinate> &cities, int startCity,
+                          std::function<void(const Solution&)> setSolution,
                           std::function<void(std::string)> log,
                           std::function<void(double)> chartLog,
                           std::function<bool()> stopRequested ) {
@@ -31,9 +32,11 @@ Solution bruteForceSearch(std::vector<Coordinate> &cities, int startCity,
             double seconds = std::chrono::duration<double>(now-start).count();
             log( "[ "+ std::to_string(seconds) +" segundos ] Distância melhorada: " + std::to_string(currentSol.distance) );
         }
+
+        setSolution( currentSol );
         chartLog( currentSol.distance );
     } while( std::next_permutation(currentSol.path.begin() + 1, currentSol.path.end()) && !stopRequested() );
-    log( "Melhor distância encontrada: " + std::to_string(currentSol.distance) );
+    log( "Melhor distância encontrada: " + std::to_string(bestSol.distance) );
     return bestSol;
 }
 
