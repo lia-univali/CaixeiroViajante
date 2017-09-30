@@ -130,6 +130,11 @@ void ToolBox::startThread()
             last = std::chrono::system_clock::now();
         },
 
+        // clear chart
+        [this]() -> void {
+            this->chartPane->clearChart();
+        },
+
         // stop requested
         [this]() -> bool {
             return stopRequested;

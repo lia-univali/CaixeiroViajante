@@ -12,6 +12,8 @@ greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 TARGET = CaixeiroViajante
 TEMPLATE = app
 
+QMAKE_CXXFLAGS += -fopenmp
+LIBS += -fopenmp
 
 SOURCES += main.cpp\
         mainwindow.cpp \

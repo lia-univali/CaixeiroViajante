@@ -74,6 +74,8 @@ void rouleteDisturb(std::vector<Coordinate> &coordinates, Solution &sol) {
     std::swap(sol.path.at(a), sol.path.at(b));
 }
 
+#include <mutex>
+
 Solution iteratedSearch(std::vector<Coordinate> &cities, std::vector<int> startPath, int maxIt, int disturbanceFactor = 2,
                         std::function<void(const Solution&)> setSolution = nullptr,
                         std::function<void(std::string)> log = nullptr,
@@ -89,9 +91,13 @@ Solution iteratedSearch(std::vector<Coordinate> &cities, std::vector<int> startP
     Solution bestGlobalSol = currentSol;
     Solution bestLocalSol = currentSol;
     int it = 0;
+    std::mutex mut;
     do {
         std::vector<int> currentPath = currentSol.path;
         double currentDistance = currentSol.distance;
+
+        Solution bestNeighbor = currentSol;
+        #pragma omp parallel for
         for(size_t i = 0; i < currentPath.size(); i++) {
             for(size_t j = i + 1; j < currentPath.size(); j++) {
                 double outI, outJ, inI, inJ;
@@ -139,12 +145,17 @@ Solution iteratedSearch(std::vector<Coordinate> &cities, std::vector<int> startP
                 neighbor.path = currentPath;
                 neighbor.distance = currentDistance - (outI + outJ) + (inI + inJ);
                 std::swap(neighbor.path.at(i), neighbor.path.at(j));
-                if(neighbor.distance < currentSol.distance) {
-                    currentSol = neighbor;
-//                    break;
+                if (neighbor.distance < currentSol.distance){
+                    mut.lock();
+                    if(neighbor.distance < bestNeighbor.distance) {
+                        bestNeighbor = neighbor;
+                    }
+                    mut.unlock();
                 }
             }
         }
+        currentSol = bestNeighbor;
+
         if(currentSol.distance < bestLocalSol.distance) {
             bestLocalSol = currentSol;
             if(bestLocalSol.distance < bestGlobalSol.distance) {

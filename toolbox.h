@@ -34,6 +34,7 @@ public:
                 std::function<void(const Solution&)>, // set solution
                 std::function<void(std::string)>,     // log
                 std::function<void(double)>,          // chart data
+                std::function<void()>,                // clearChart
                 std::function<bool()>,                // if stop requested
                 std::function<void()>                 // on finish
             )

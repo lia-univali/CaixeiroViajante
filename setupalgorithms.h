@@ -16,6 +16,7 @@ void setupAlgorithms(std::vector<ToolBox::AlgorithmData> &algorithms){
                 std::function<void(const Solution&)> setSolution,
                 std::function<void(std::string)> log,
                 std::function<void(double)> chartLog,
+                std::function<void()>,
                 std::function<bool()> stopRequested,
                 std::function<void()> onFinish
             ) -> void {
@@ -34,6 +35,7 @@ void setupAlgorithms(std::vector<ToolBox::AlgorithmData> &algorithms){
                 std::function<void(const Solution&)> setSolution,
                 std::function<void(std::string)> log,
                 std::function<void(double)> chartLog,
+                std::function<void()>,
                 std::function<bool()> stopRequested,
                 std::function<void()> onFinish
             ) -> void {
@@ -54,13 +56,14 @@ void setupAlgorithms(std::vector<ToolBox::AlgorithmData> &algorithms){
                 std::function<void(const Solution&)> setSolution,
                 std::function<void(std::string)> log,
                 std::function<void(double)> chartLog,
+                std::function<void()>,
                 std::function<bool()> stopRequested,
                 std::function<void()> onFinish
             ) -> void {
             Solution s = iteratedSearch(
                         g,            // coordinates
                         2000,         // n iterations
-                        g.size()*0.2, // num. of disturbance
+                        g.size()*0.1, // num. of disturbance
                         setSolution, log, chartLog, stopRequested
             );
             setSolution( s );
@@ -77,17 +80,20 @@ void setupAlgorithms(std::vector<ToolBox::AlgorithmData> &algorithms){
                 std::function<void(const Solution&)> setSolution,
                 std::function<void(std::string)> log,
                 std::function<void(double)> chartLog,
+                std::function<void()> clearChart,
                 std::function<bool()> stopRequested,
                 std::function<void()> onFinish
             ) -> void {
             Solution s = minimumLocalRoute(g, initialNode, setSolution, log, chartLog, stopRequested);
             setSolution( s );
+            clearChart();
+            log( "Rota inicial calculada, iniciando busca iterada..." );
             if ( !stopRequested() ){
                 s = iteratedSearch(
                             g,            // coordinates
                             s.path,       // start path
                             2000,         // n iterations
-                            g.size()*0.2, // num. of disturbance
+                            g.size()*0.1, // num. of disturbance
                             setSolution, log, chartLog, stopRequested
                 );
                 setSolution( s );

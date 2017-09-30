@@ -33,8 +33,8 @@ void GraphicPane::paintEvent(QPaintEvent *)
     painter.drawText( 4, 14, "Representação Gráfica" );
 
     if ( coordinates->size() > 0 ){
-        double minX, maxX;
-        double minY, maxY;
+        double minX = 0, maxX = 0;
+        double minY = 0, maxY = 0;
         bool first = true;
         for (Coordinate &c : *coordinates){
             if ( c.x < minX || first ) minX = c.x;
@@ -121,7 +121,7 @@ void GraphicPane::mouseReleaseEvent(QMouseEvent *)
     moving = false;
 }
 
-void GraphicPane::mouseMoveEvent(QMouseEvent *e){
+void GraphicPane::mouseMoveEvent(QMouseEvent *){
 //    mousePos = e->localPos();
 //    if ( moving ){
 //        coordinates->at(*selected).x = e->localPos().x();
