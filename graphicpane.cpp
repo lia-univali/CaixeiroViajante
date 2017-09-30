@@ -45,7 +45,7 @@ void GraphicPane::paintEvent(QPaintEvent *)
         }
 
         double W = width() - 20;
-        double H = height() - 30;
+        double H = height() - 40;
 
         double scaleX = W / (maxX-minX);
         double scaleY = H / (maxY-minY);
@@ -73,9 +73,9 @@ void GraphicPane::paintEvent(QPaintEvent *)
 
 
         // path
-        {
+        if ( solution.path.size() >= 2 ) {
             painter.setPen(QPen(QBrush(QColor(255,0,0,100)), 1.5));
-            Coordinate prev = coordinates->back();
+            Coordinate prev = coordinates->at(solution.path.back());
             for (int i : solution.path){
                 Coordinate curr = coordinates->at(i);
                 painter.drawLine(

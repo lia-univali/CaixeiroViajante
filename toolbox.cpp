@@ -46,6 +46,9 @@ void ToolBox::loadInstance()
         return;
     }
     graphicPane->getGraphicData().clear();
+    Solution empty;
+    empty.path.clear();
+    graphicPane->setSolution(empty);
     std::vector<Coordinate> tspInstance = getTspInstance( file );
     std::copy( tspInstance.begin(), tspInstance.end(), std::back_inserter(graphicPane->getGraphicData()) );
     graphicPane->reload();
