@@ -74,7 +74,7 @@ void GraphicPane::paintEvent(QPaintEvent *)
 
         // path
         {
-            painter.setPen(QPen(QBrush(QColor(255,0,0,50)), 1.5));
+            painter.setPen(QPen(QBrush(QColor(255,0,0,100)), 1.5));
             Coordinate *prev = NULL;
             for (int i : solution.path){
                 Coordinate *curr = &coordinates->at(i);

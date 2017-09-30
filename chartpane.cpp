@@ -1,9 +1,11 @@
 #include "chartpane.h"
 
+#define StartWidth 450
+
 ChartPane::ChartPane(QWidget *parent) : QWidget(parent)
 {
     setFixedHeight(220);
-    setFixedWidth(400);
+    setFixedWidth(StartWidth);
     QTimer *fpsTimer = new QTimer();
     QObject::connect(fpsTimer, SIGNAL(timeout()), this, SLOT(callRepaint()));
     fpsTimer->start( 50 );
@@ -45,7 +47,7 @@ void ChartPane::paintEvent(QPaintEvent *)
 
     painter.setRenderHint(QPainter::Antialiasing);
 
-    resizeFunction( std::max(400, (int) (20 + steps.size() * stepDistance) ) );
+    resizeFunction( std::max(StartWidth, (int) (20 + steps.size() * stepDistance) ) );
 
     if ( steps.size() >= 2 ){
 

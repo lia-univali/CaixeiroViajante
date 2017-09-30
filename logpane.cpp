@@ -2,8 +2,7 @@
 
 LogPane::LogPane(QWidget *parent) : QWidget(parent)
 {
-    setMaximumWidth(400);
-    setMinimumWidth(400);
+    setFixedWidth(450);
 
     mainLayout = new QVBoxLayout;
     mainLayout->setSpacing(0);

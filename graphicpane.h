@@ -40,7 +40,7 @@ private:
 
     GraphicData *coordinates = NULL;
     Solution solution;
-    const int nodeRadius = 1.5;
+    const int nodeRadius = 2.0;
 
     QPointF mousePos;
     int *selected = NULL;
