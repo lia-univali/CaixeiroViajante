@@ -91,12 +91,54 @@ Solution iteratedSearch(std::vector<Coordinate> &cities, std::vector<int> startP
     int it = 0;
     do {
         std::vector<int> currentPath = currentSol.path;
+        double currentDistance = currentSol.distance;
         for(size_t i = 0; i < currentPath.size(); i++) {
             for(size_t j = i + 1; j < currentPath.size(); j++) {
+                double outI, outJ, inI, inJ;
+                if(i + 1 == j) {
+                    outI = euclidianDistance(
+                        getCoordinate(cities, currentPath, i - 1),
+                        getCoordinate(cities, currentPath, i)
+                    );
+                    outJ = euclidianDistance(
+                        getCoordinate(cities, currentPath, j),
+                        getCoordinate(cities, currentPath, j + 1)
+                    );
+                } else if(i == 0 && j + 1 == currentPath.size()) {
+                    outI = euclidianDistance(
+                        getCoordinate(cities, currentPath, i),
+                        getCoordinate(cities, currentPath, i + 1)
+                    );
+                    outJ = euclidianDistance(
+                        getCoordinate(cities, currentPath, j - 1),
+                        getCoordinate(cities, currentPath, j)
+                    );
+                } else {
+                    outI = getDistanceBetween(
+                        getCoordinate(cities, currentPath, i - 1),
+                        getCoordinate(cities, currentPath, i),
+                        getCoordinate(cities, currentPath, i + 1)
+                    );
+                    outJ = getDistanceBetween(
+                        getCoordinate(cities, currentPath, j - 1),
+                        getCoordinate(cities, currentPath, j),
+                        getCoordinate(cities, currentPath, j + 1)
+                    );
+                }
+                inI = getDistanceBetween(
+                    getCoordinate(cities, currentPath, j - 1),
+                    getCoordinate(cities, currentPath, i),
+                    getCoordinate(cities, currentPath, j + 1)
+                );
+                inJ = getDistanceBetween(
+                    getCoordinate(cities, currentPath, i - 1),
+                    getCoordinate(cities, currentPath, j),
+                    getCoordinate(cities, currentPath, i + 1)
+                );
                 Solution neighbor;
                 neighbor.path = currentPath;
+                neighbor.distance = currentDistance - (outI + outJ) + (inI + inJ);
                 std::swap(neighbor.path.at(i), neighbor.path.at(j));
-                neighbor.distance = getPathDistance(cities, neighbor.path);
                 if(neighbor.distance < currentSol.distance) {
                     currentSol = neighbor;
 //                    break;
