@@ -7,7 +7,7 @@
 #include "minimumLocalRoute.h"
 
 void setupAlgorithms(std::vector<ToolBox::AlgorithmData> &algorithms){
-    {
+    { /// BRUTE FORCE
         ToolBox::AlgorithmData bruteForce;
         bruteForce.name = "Força Bruta";
         bruteForce.run = [](
@@ -25,7 +25,7 @@ void setupAlgorithms(std::vector<ToolBox::AlgorithmData> &algorithms){
         };
         algorithms.emplace_back(bruteForce);
     }
-    {
+    { /// CONSTRUCTIVE
         ToolBox::AlgorithmData constructive;
         constructive.name = "Cidade mais Próxima";
         constructive.run = [](
@@ -45,7 +45,7 @@ void setupAlgorithms(std::vector<ToolBox::AlgorithmData> &algorithms){
         algorithms.emplace_back(constructive);
 
     }
-    {
+    { /// ITERATED
         ToolBox::AlgorithmData iterated;
         iterated.name = "Busca Iterada";
         iterated.run = [](

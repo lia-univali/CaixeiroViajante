@@ -91,15 +91,15 @@ Solution iteratedSearch(std::vector<Coordinate> &cities, std::vector<int> startP
     int it = 0;
     do {
         std::vector<int> currentPath = currentSol.path;
-        for(int i = 0; i < currentPath.size(); i++) {
-            for(int j = i + 1; j < currentPath.size(); j++) {
+        for(size_t i = 0; i < currentPath.size(); i++) {
+            for(size_t j = i + 1; j < currentPath.size(); j++) {
                 Solution neighbor;
                 neighbor.path = currentPath;
                 std::swap(neighbor.path.at(i), neighbor.path.at(j));
                 neighbor.distance = getPathDistance(cities, neighbor.path);
                 if(neighbor.distance < currentSol.distance) {
                     currentSol = neighbor;
-                    break;
+//                    break;
                 }
             }
         }
@@ -109,9 +109,12 @@ Solution iteratedSearch(std::vector<Coordinate> &cities, std::vector<int> startP
                 bestGlobalSol = bestLocalSol;
                 auto now = std::chrono::steady_clock::now();
                 double seconds = std::chrono::duration<double>(now-start).count();
-                log( "[ "+ std::to_string(seconds) +" segundos ] Distância: " + std::to_string(currentSol.distance) );
+                log( "[ "+ std::to_string(seconds) +" segundos ] Distância melhorada: " + std::to_string(currentSol.distance) );
             }
         } else {
+            if ( it >= maxIt ){
+                break;
+            }
             randomDisturb(bestLocalSol.path, disturbanceFactor);
             bestLocalSol.distance = getPathDistance(cities, currentSol.path);
             currentSol = bestLocalSol;

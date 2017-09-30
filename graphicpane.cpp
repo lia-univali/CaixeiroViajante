@@ -44,16 +44,16 @@ void GraphicPane::paintEvent(QPaintEvent *)
             first = false;
         }
 
-        double W = width();
-        double H = height() - 20;
+        double W = width() - 20;
+        double H = height() - 30;
 
         double scaleX = W / (maxX-minX);
         double scaleY = H / (maxY-minY);
 
         double scale = std::min( scaleX, scaleY );
 
-        double offsetX = (W-scale*(maxX-minX)) / 2.0;
-        double offsetY = -20 + (H-scale*(maxY-minY)) / 2.0;
+        double offsetX = -10 + (W-scale*(maxX-minX)) / 2.0;
+        double offsetY = -30 + (H-scale*(maxY-minY)) / 2.0;
 
         auto toX = [&](double x) -> double {
             return W - (x-minX) * scale - offsetX;
@@ -75,15 +75,13 @@ void GraphicPane::paintEvent(QPaintEvent *)
         // path
         {
             painter.setPen(QPen(QBrush(QColor(255,0,0,100)), 1.5));
-            Coordinate *prev = NULL;
+            Coordinate prev = coordinates->back();
             for (int i : solution.path){
-                Coordinate *curr = &coordinates->at(i);
-                if ( prev != NULL ){
-                    painter.drawLine(
-                        QPointF( toX(prev->x), toY(prev->y) ),
-                        QPointF( toX(curr->x), toY(curr->y) )
-                    );
-                }
+                Coordinate curr = coordinates->at(i);
+                painter.drawLine(
+                    QPointF( toX(prev.x), toY(prev.y) ),
+                    QPointF( toX(curr.x), toY(curr.y) )
+                );
                 prev = curr;
             }
         }
