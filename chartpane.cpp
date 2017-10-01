@@ -2,13 +2,13 @@
 
 #define StartWidth 450
 
-ChartPane::ChartPane(QWidget *parent) : QWidget(parent)
+ChartPane::ChartPane(QScrollArea *scrollArea, QWidget *parent) : QWidget(parent), scrollArea(scrollArea)
 {
     setFixedHeight(220);
     setFixedWidth(StartWidth);
     QTimer *fpsTimer = new QTimer();
     QObject::connect(fpsTimer, SIGNAL(timeout()), this, SLOT(callRepaint()));
-    fpsTimer->start( 50 );
+    fpsTimer->start( 30 );
 }
 
 int i = 0;
@@ -47,7 +47,15 @@ void ChartPane::paintEvent(QPaintEvent *)
 
     painter.setRenderHint(QPainter::Antialiasing);
 
-    resizeFunction( std::max(StartWidth, (int) (20 + steps.size() * stepDistance) ) );
+    // resize + scroll right
+    int newWidth = std::max(StartWidth, (int) (20 + steps.size() * stepDistance) );
+    if ( width() != newWidth ){
+        QScrollBar *sb = scrollArea->horizontalScrollBar();
+        if ( sb->value() == sb->maximum() ){
+            this->setFixedWidth( newWidth );
+            sb->setValue( sb->maximum() );
+        }
+    }
 
     if ( steps.size() >= 2 ){
 
@@ -99,25 +107,25 @@ void ChartPane::paintEvent(QPaintEvent *)
         bool first = true;
         double prevX, prevY;
         for (const double &step : steps){
-            double y = ( height() - ((step-min) * scale) ) - offset;
-            painter.setBrush(QBrush(QColor("black")));
-//            painter.drawText( QPointF( x-5, y-5 ), QString::fromStdString(std::to_string((int) step)) );
-            painter.drawEllipse( QPointF(x,y), pointRadius, pointRadius );
-            if ( first ){
-                prevX = x;
-                prevY = y;
-                first = false;
-            } else {
-                painter.drawLine( QPointF( prevX, prevY ), QPointF( x, y ) );
-                prevX = x;
-                prevY = y;
+            if (
+                    x >= scrollArea->horizontalScrollBar()->value()
+                &&  x <= scrollArea->horizontalScrollBar()->value() + scrollArea->width()
+                ){
+                double y = ( height() - ((step-min) * scale) ) - offset;
+                painter.setBrush(QBrush(QColor("black")));
+    //            painter.drawText( QPointF( x-5, y-5 ), QString::fromStdString(std::to_string((int) step)) );
+                painter.drawEllipse( QPointF(x,y), pointRadius, pointRadius );
+                if ( first ){
+                    prevX = x;
+                    prevY = y;
+                    first = false;
+                } else {
+                    painter.drawLine( QPointF( prevX, prevY ), QPointF( x, y ) );
+                    prevX = x;
+                    prevY = y;
+                }
             }
             x += stepDistance;
         }
     }
-}
-
-void ChartPane::setScrollRightFunction(const std::function<void(int)> &value)
-{
-    resizeFunction = value;
 }

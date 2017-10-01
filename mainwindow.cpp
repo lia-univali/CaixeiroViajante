@@ -8,8 +8,9 @@ MainWindow::MainWindow(QWidget *parent)
     mainWidget = new QWidget;
     rightWidget = new QWidget;
 
+    chartScroll = new QScrollArea();
     graphPane = new GraphicPane(&graphicData);
-    chartPane = new ChartPane;
+    chartPane = new ChartPane(chartScroll);
     logPane = new LogPane;
     toolBox = new ToolBox;
 
@@ -21,7 +22,6 @@ MainWindow::MainWindow(QWidget *parent)
         chartTitle->setStyleSheet("color: black");
     }
 
-    chartScroll = new QScrollArea();
     chartScroll->setWidget(chartPane);
     chartScroll->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     chartScroll->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
@@ -30,13 +30,6 @@ MainWindow::MainWindow(QWidget *parent)
     chartScroll->setWidgetResizable(true);
     chartScroll->setFrameShape(QFrame::NoFrame);
     chartScroll->setSizePolicy(QSizePolicy::Expanding,QSizePolicy::Fixed);
-    chartPane->setScrollRightFunction([this](int newWidth){
-        QScrollBar *sb = chartScroll->horizontalScrollBar();
-        if ( sb->value() == sb->maximum() ){
-            chartPane->setFixedWidth( newWidth );
-            sb->setValue( sb->maximum() );
-        }
-    });
 
     mainLayout->setMargin(5);
     mainLayout->setSpacing(5);

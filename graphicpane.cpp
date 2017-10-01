@@ -6,7 +6,7 @@ GraphicPane::GraphicPane(GraphicData *graphicData, QWidget *parent) : QWidget(pa
     setAutoFillBackground(false);
     QTimer *fpsTimer = new QTimer();
     QObject::connect(fpsTimer, SIGNAL(timeout()), this, SLOT(callRepaint()));
-    fpsTimer->start( 50 );
+    fpsTimer->start( 100 );
 }
 
 void GraphicPane::callRepaint(){
@@ -91,6 +91,7 @@ void GraphicPane::paintEvent(QPaintEvent *)
             return H - (y-minY) * scale - offsetY;
         };
 
+        painter.save();
         // path
         if ( solution.path.size() >= 2 ) {
             painter.setPen(QPen(QBrush(QColor(255,0,0,100)), 1.5));
@@ -101,9 +102,14 @@ void GraphicPane::paintEvent(QPaintEvent *)
                     QPointF( toX(prev.x), toY(prev.y) ),
                     QPointF( toX(curr.x), toY(curr.y) )
                 );
+                painter.drawEllipse(
+                    QPointF( toX(curr.x), toY(curr.y) ),
+                    nodeRadius + .5, nodeRadius + 0.5
+                );
                 prev = curr;
             }
         }
+        painter.restore();
 
         // all points
         painter.setBrush(QBrush(QColor(0,120,0)));
