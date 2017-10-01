@@ -32,14 +32,14 @@ void randomDisturb(std::vector<int> &path, int disturbanceFactor) {
 void rouleteDisturb(std::vector<Coordinate> &coordinates, Solution &sol) {
     int totalWeight = 0;
     int index[sol.path.size()], weights[sol.path.size()];
-    for(int i = 0; i < sol.path.size(); i++) {
+    for(size_t i = 0; i < sol.path.size(); i++) {
         Coordinate current = getCoordinate(coordinates, sol.path, i);
         Coordinate next = getCoordinate(coordinates, sol.path, (i + 1 < sol.path.size()) ? i + 1 : 0);
         double distance = euclidianDistance(current, next);
         totalWeight += distance;
 
         int tmp, currentIndex = i;
-        for(int j = 0; j < i; j++) {
+        for(size_t j = 0; j < i; j++) {
             if(distance < weights[j]) {
                 tmp = weights[j];
                 weights[j] = distance;
@@ -54,7 +54,7 @@ void rouleteDisturb(std::vector<Coordinate> &coordinates, Solution &sol) {
     }
     int cut = rand() % totalWeight;
     int a, b, sum = 0;
-    for(int i = 0; i < sol.path.size(); i++) {
+    for(size_t i = 0; i < sol.path.size(); i++) {
         sum += weights[i];
         if(sum >= cut) {
             a = index[i];
@@ -63,7 +63,7 @@ void rouleteDisturb(std::vector<Coordinate> &coordinates, Solution &sol) {
     }
     sum = 0;
     do {
-        for(int i = 0; i < sol.path.size(); i++) {
+        for(size_t i = 0; i < sol.path.size(); i++) {
             sum += weights[i];
             if(sum >= cut) {
                 b = index[i];
@@ -191,7 +191,7 @@ Solution iteratedSearch(std::vector<Coordinate> &coordinates, int maxIt, int dis
                         std::function<bool()> stopRequested = nullptr
                 ) {
     std::vector<int> path;
-    for(int i = 0; i < coordinates.size(); i++)
+    for(size_t i = 0; i < coordinates.size(); i++)
         path.push_back(i);
     std::random_shuffle( path.begin(), path.end() );
     return iteratedSearch(coordinates, path, maxIt, disturbanceFactor, setSolution, log, chartLog, stopRequested );

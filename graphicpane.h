@@ -2,6 +2,7 @@
 #define GRAPHPANE_H
 
 #include <cmath>
+#include <map>
 
 #include <QWidget>
 #include <QPainter>
@@ -21,6 +22,7 @@ public:
     void reload();
 
     void setSolution(const Solution &);
+    std::map<std::string, std::string> & getMetadata();
 
 signals:
 
@@ -40,7 +42,9 @@ private:
 
     GraphicData *coordinates = NULL;
     Solution solution;
-    const int nodeRadius = 1.7;
+    const int nodeRadius = 2.5;
+
+    std::map<std::string,std::string> metadata;
 
     QPointF mousePos;
     int *selected = NULL;

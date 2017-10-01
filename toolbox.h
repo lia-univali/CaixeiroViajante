@@ -47,6 +47,7 @@ public slots:
     void loadInstance();
     void stopClicked();
     void runClicked();
+    void clearChart();
     void appendStep(double);
     void appendLog(QString);
     void setSolution(const Solution&);

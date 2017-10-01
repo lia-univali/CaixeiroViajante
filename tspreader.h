@@ -28,12 +28,26 @@ std::vector<std::string> split(const std::string &s, char delim) {
     return elems;
 }
 
-std::vector<Coordinate> getTspInstance(std::string filePath, int numberOfCoordinates = INT_MAX) {
+std::vector<Coordinate> getTspInstance(
+        std::string filePath,
+        std::map<std::string,std::string> &metadata,
+        int numberOfCoordinates = INT_MAX
+    ){
+    {
+        size_t pos = filePath.find_last_of('/') +1;
+        metadata["arquivo"] = filePath.substr(pos);
+    }
 
     std::ifstream file(filePath);
     std::string line;
     do {
         std::getline(file, line);
+        if (line.substr(0,9) == "DIMENSION"){
+            std::string sub = line.substr( line.find_last_of(':')+1 );
+            while (sub.front() == ' ') sub = sub.substr(1);
+            while (sub.back()  == ' ') sub = sub.substr(0,sub.size()-1);
+            metadata["pontos"] = sub;
+        }
     } while ( line != "NODE_COORD_SECTION" );
 
     std::vector<Coordinate> coordinates;

@@ -17,7 +17,7 @@ Solution bruteForceSearch(std::vector<Coordinate> &cities, int startCity,
                           std::function<bool()> stopRequested ) {
     Solution currentSol;
     currentSol.path.push_back(startCity);
-    for(int i = 0; i < cities.size(); i++)
+    for(size_t i = 0; i < cities.size(); i++)
         if(i != startCity)
             currentSol.path.push_back(i);
 

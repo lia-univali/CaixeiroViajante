@@ -49,7 +49,7 @@ void ToolBox::loadInstance()
     Solution empty;
     empty.path.clear();
     graphicPane->setSolution(empty);
-    std::vector<Coordinate> tspInstance = getTspInstance( file );
+    std::vector<Coordinate> tspInstance = getTspInstance( file, graphicPane->getMetadata() );
     std::copy( tspInstance.begin(), tspInstance.end(), std::back_inserter(graphicPane->getGraphicData()) );
     graphicPane->reload();
 }
@@ -71,6 +71,10 @@ void ToolBox::runClicked(){
         this->chartPane->clearChart();
         proccess = new std::thread( &ToolBox::startThread, this );
     }
+}
+
+void ToolBox::clearChart(){
+    this->chartPane->clearChart();
 }
 
 void ToolBox::appendStep(double value){
@@ -132,7 +136,11 @@ void ToolBox::startThread()
 
         // clear chart
         [this]() -> void {
-            this->chartPane->clearChart();
+            std::this_thread::sleep_for(std::chrono::milliseconds(500));
+            QMetaObject::invokeMethod(
+                this, "clearChart",
+                Qt::QueuedConnection
+            );
         },
 
         // stop requested

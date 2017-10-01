@@ -10,7 +10,7 @@ GraphicPane::GraphicPane(GraphicData *graphicData, QWidget *parent) : QWidget(pa
 }
 
 void GraphicPane::callRepaint(){
-    this->repaint();
+    this->update();
 }
 
 void GraphicPane::paintEvent(QPaintEvent *)
@@ -27,10 +27,39 @@ void GraphicPane::paintEvent(QPaintEvent *)
 //    lastHeight = height();
 //    doRepaint = false;
 
-    QFont font;
-    font.setBold(true);
-    painter.setFont(font);
-    painter.drawText( 4, 14, "Representação Gráfica" );
+    painter.save();
+    painter.setPen(QPen( QBrush(Qt::black), 1.0 ));
+    painter.setBrush(QBrush(Qt::white));
+    painter.drawRoundedRect( QRectF( 0, 0, width(), height() ), 4, 4 );
+    painter.restore();
+
+    QFont boldFont;
+    QFont plainFont;
+    boldFont.setBold(true);
+
+    QFontMetrics fmBold (boldFont);
+    QFontMetrics fmPlain(plainFont);
+
+    painter.setFont(boldFont);
+    QString title("Representação Gráfica");
+    qreal marginText = 14;
+    painter.drawText( QPointF(4,marginText), title );
+
+    // metadata
+    double accPos = 8 + fmBold.width(title);
+    for (const auto &data : metadata){
+        accPos += 10;
+        QString key   = QString::fromStdString( data.first+": " );
+        QString value = QString::fromStdString( data.second );
+
+        painter.setFont( boldFont );
+        painter.drawText( QPointF( accPos, marginText ), key );
+        accPos += fmBold .width( key );
+
+        painter.setFont( plainFont );
+        painter.drawText( QPointF( accPos, marginText ), value );
+        accPos += fmPlain.width( value );
+    }
 
     if ( coordinates->size() > 0 ){
         double minX = 0, maxX = 0;
@@ -52,25 +81,15 @@ void GraphicPane::paintEvent(QPaintEvent *)
 
         double scale = std::min( scaleX, scaleY );
 
-        double offsetX = -10 + (W-scale*(maxX-minX)) / 2.0;
+        double offsetX = 10 + (W-scale*(maxX-minX)) / 2.0;
         double offsetY = -30 + (H-scale*(maxY-minY)) / 2.0;
 
         auto toX = [&](double x) -> double {
-            return W - (x-minX) * scale - offsetX;
+            return (x-minX) * scale + offsetX;
         };
         auto toY = [&](double y) -> double {
             return H - (y-minY) * scale - offsetY;
         };
-
-//        for (Vertice &v1 : graphicData->vertices){
-//            for (Edge &edge : v1.edges){
-//                if ( edge.source == graphicData->getIndexOfVertice(v1.name) ){
-//                    Vertice &v2 = graphicData->vertices.at(edge.target);
-//                    painter.drawLine( QPointF( v1.x, v1.y ), QPointF( v2.x, v2.y ) );
-//                }
-//            }
-//        }
-
 
         // path
         if ( solution.path.size() >= 2 ) {
@@ -141,6 +160,11 @@ void GraphicPane::mouseMoveEvent(QMouseEvent *){
 //        }
 //    }
 //    this->repaint();
+}
+
+std::map<std::string, std::string> & GraphicPane::getMetadata()
+{
+    return metadata;
 }
 
 void GraphicPane::setSolution(const Solution &s)

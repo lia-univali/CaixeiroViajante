@@ -52,7 +52,7 @@ void setupAlgorithms(std::vector<ToolBox::AlgorithmData> &algorithms){
         iterated.name = "Busca Iterada";
         iterated.run = [](
                 GraphicData &g,
-                int initialNode,
+                int, // initialNode
                 std::function<void(const Solution&)> setSolution,
                 std::function<void(std::string)> log,
                 std::function<void(double)> chartLog,
@@ -86,9 +86,9 @@ void setupAlgorithms(std::vector<ToolBox::AlgorithmData> &algorithms){
             ) -> void {
             Solution s = minimumLocalRoute(g, initialNode, setSolution, log, chartLog, stopRequested);
             setSolution( s );
-            clearChart();
-            log( "Rota inicial calculada, iniciando busca iterada..." );
             if ( !stopRequested() ){
+                clearChart();
+                log( "Rota inicial calculada, iniciando busca iterada..." );
                 s = iteratedSearch(
                             g,            // coordinates
                             s.path,       // start path

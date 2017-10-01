@@ -15,14 +15,14 @@ Solution minimumLocalRoute(std::vector<Coordinate> &cities, int startNode,
     auto start = std::chrono::steady_clock::now();
 
     std::vector<int> closedSet;
-    for(int i = 0; i < cities.size(); i++)
+    for(size_t i = 0; i < cities.size(); i++)
         if(i != startNode)
             closedSet.push_back(i);
     do {
         Coordinate source = cities.at(sol.path.back());
         double smallerDistance = INT_MAX;
         int closedSetIndex;
-        for(int i = 0; i < closedSet.size(); i++) {
+        for(size_t i = 0; i < closedSet.size(); i++) {
             Coordinate target = cities.at(closedSet.at(i));
             double distance = euclidianDistance(source, target);
             if(distance < smallerDistance) {
