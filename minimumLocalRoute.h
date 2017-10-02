@@ -20,48 +20,51 @@ Solution minimumLocalRoute(std::vector<Coordinate> &cities, int startNode,
     sol.distance = getPathDistance(cities, sol.path);
     for(int i = 1; i < sol.path.size(); i++) {
         Coordinate source = cities.at(sol.path.at(i));
-        double smallerDistance = sol.distance;
+        double smallerDistance = INT_MAX;
         int smallerCityIndex;
         for(int j = i + 1; j < sol.path.size(); j++) {
-            double outI, outJ, inI, inJ;
-            if(i + 1 == j) {
-                outI = euclidianDistance(
-                    getCoordinate(cities, sol.path, i - 1),
-                    getCoordinate(cities, sol.path, i)
-                );
-                outJ = euclidianDistance(
-                    getCoordinate(cities, sol.path, j),
-                    getCoordinate(cities, sol.path, j + 1)
-                );
-            } else {
-                outI = getDistanceBetween(
-                    getCoordinate(cities, sol.path, i - 1),
-                    getCoordinate(cities, sol.path, i),
-                    getCoordinate(cities, sol.path, i + 1)
-                );
-                outJ = getDistanceBetween(
-                    getCoordinate(cities, sol.path, j - 1),
-                    getCoordinate(cities, sol.path, j),
-                    getCoordinate(cities, sol.path, j + 1)
-                );
-            }
-            inI = getDistanceBetween(
-                getCoordinate(cities, sol.path, j - 1),
+            double distance = euclidianDistance(
                 getCoordinate(cities, sol.path, i),
-                getCoordinate(cities, sol.path, j + 1)
+                getCoordinate(cities, sol.path, j)
             );
-            inJ = getDistanceBetween(
-                getCoordinate(cities, sol.path, i - 1),
-                getCoordinate(cities, sol.path, j),
-                getCoordinate(cities, sol.path, i + 1)
-            );
-            double distance = sol.distance - (outI + outJ) + (inI + inJ);
             if(distance < smallerDistance) {
                 smallerDistance = distance;
                 smallerCityIndex = j;
             }
         }
-        sol.distance = smallerDistance;
+        double outI, outJ, inI, inJ;
+        if(i + 1 == smallerCityIndex) {
+            outI = euclidianDistance(
+                getCoordinate(cities, sol.path, i - 1),
+                getCoordinate(cities, sol.path, i)
+            );
+            outJ = euclidianDistance(
+                getCoordinate(cities, sol.path, smallerCityIndex),
+                getCoordinate(cities, sol.path, smallerCityIndex + 1)
+            );
+        } else {
+            outI = getDistanceBetween(
+                getCoordinate(cities, sol.path, i - 1),
+                getCoordinate(cities, sol.path, i),
+                getCoordinate(cities, sol.path, i + 1)
+            );
+            outJ = getDistanceBetween(
+                getCoordinate(cities, sol.path, smallerCityIndex - 1),
+                getCoordinate(cities, sol.path, smallerCityIndex),
+                getCoordinate(cities, sol.path, smallerCityIndex + 1)
+            );
+        }
+        inI = getDistanceBetween(
+            getCoordinate(cities, sol.path, smallerCityIndex - 1),
+            getCoordinate(cities, sol.path, i),
+            getCoordinate(cities, sol.path, smallerCityIndex + 1)
+        );
+        inJ = getDistanceBetween(
+            getCoordinate(cities, sol.path, i - 1),
+            getCoordinate(cities, sol.path, smallerCityIndex),
+            getCoordinate(cities, sol.path, i + 1)
+        );
+        sol.distance = sol.distance - (outI + outJ) + (inI +inJ);
         std::swap(sol.path.at(i), sol.path.at(smallerCityIndex));
 
         auto now = std::chrono::steady_clock::now();
