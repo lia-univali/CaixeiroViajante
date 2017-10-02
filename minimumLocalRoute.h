@@ -10,41 +10,83 @@ Solution minimumLocalRoute(std::vector<Coordinate> &cities, int startNode,
                            std::function<bool()> stopRequested ) {
     Solution sol;
     sol.path.push_back(startNode);
-    sol.distance = 0;
-
-    auto start = std::chrono::steady_clock::now();
 
     std::vector<int> closedSet;
-    for(size_t i = 0; i < cities.size(); i++)
+    for(int i = 0; i < cities.size(); i++) {
         if(i != startNode)
-            closedSet.push_back(i);
-    do {
-        Coordinate source = cities.at(sol.path.back());
-        double smallerDistance = INT_MAX;
-        int closedSetIndex;
-        for(size_t i = 0; i < closedSet.size(); i++) {
-            Coordinate target = cities.at(closedSet.at(i));
-            double distance = euclidianDistance(source, target);
+            sol.path.push_back(i);
+    }
+    auto start = std::chrono::steady_clock::now();
+    sol.distance = getPathDistance(cities, sol.path);
+    for(int i = 1; i < sol.path.size(); i++) {
+        Coordinate source = cities.at(sol.path.at(i));
+        double smallerDistance = sol.distance;
+        int smallerCityIndex;
+        for(int j = i + 1; j < sol.path.size(); j++) {
+            double outI, outJ, inI, inJ;
+            if(i + 1 == j) {
+                outI = euclidianDistance(
+                    getCoordinate(cities, sol.path, i - 1),
+                    getCoordinate(cities, sol.path, i)
+                );
+                outJ = euclidianDistance(
+                    getCoordinate(cities, sol.path, j),
+                    getCoordinate(cities, sol.path, j + 1)
+                );
+            } else {
+                outI = getDistanceBetween(
+                    getCoordinate(cities, sol.path, i - 1),
+                    getCoordinate(cities, sol.path, i),
+                    getCoordinate(cities, sol.path, i + 1)
+                );
+                outJ = getDistanceBetween(
+                    getCoordinate(cities, sol.path, j - 1),
+                    getCoordinate(cities, sol.path, j),
+                    getCoordinate(cities, sol.path, j + 1)
+                );
+            }
+            inI = getDistanceBetween(
+                getCoordinate(cities, sol.path, j - 1),
+                getCoordinate(cities, sol.path, i),
+                getCoordinate(cities, sol.path, j + 1)
+            );
+            inJ = getDistanceBetween(
+                getCoordinate(cities, sol.path, i - 1),
+                getCoordinate(cities, sol.path, j),
+                getCoordinate(cities, sol.path, i + 1)
+            );
+            double distance = sol.distance - (outI + outJ) + (inI + inJ);
             if(distance < smallerDistance) {
                 smallerDistance = distance;
-                closedSetIndex = i;
-
+                smallerCityIndex = j;
             }
         }
-        sol.distance += smallerDistance;
-        sol.path.push_back(closedSet.at(closedSetIndex));
-        closedSet.erase(closedSet.begin() + closedSetIndex);
+        sol.distance = smallerDistance;
+        std::swap(sol.path.at(i), sol.path.at(smallerCityIndex));
 
         auto now = std::chrono::steady_clock::now();
         double seconds = std::chrono::duration<double>(now-start).count();
         log( "[ "+ std::to_string(seconds) +" segundos ] Distância construída: " + std::to_string(sol.distance) );
         chartLog( sol.distance );
         setSolution( sol );
-
-    } while(closedSet.size() > 0 && !stopRequested());
-    Coordinate source = cities.at(sol.path.back());
-    Coordinate target = cities.at(startNode);
-    sol.distance += euclidianDistance(source, target);
+    }
+    sol.distance -= euclidianDistance(
+        getCoordinate(cities, sol.path, 0),
+        getCoordinate(cities, sol.path, 1)
+    );
+    sol.distance -= euclidianDistance(
+        getCoordinate(cities, sol.path, sol.path.size() - 2),
+        getCoordinate(cities, sol.path, sol.path.size() - 1)
+    );
+    sol.distance += euclidianDistance(
+        getCoordinate(cities, sol.path, 0),
+        getCoordinate(cities, sol.path, sol.path.size() - 2)
+    );
+    sol.distance += euclidianDistance(
+        getCoordinate(cities, sol.path, sol.path.size() - 1),
+        getCoordinate(cities, sol.path, 1)
+    );
+    std::swap(sol.path.at(0), sol.path.back());
     log( "Distância final: " + std::to_string(sol.distance) );
     return sol;
 }
