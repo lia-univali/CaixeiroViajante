@@ -63,7 +63,7 @@ void setupAlgorithms(std::vector<ToolBox::AlgorithmData> &algorithms){
             Solution s = iteratedSearch(
                         g,            // coordinates
                         2000,         // n iterations
-                        g.size()*0.1, // num. of disturbance
+                        g.size()*0.05 +1, // num. of disturbance
                         setSolution, log, chartLog, stopRequested
             );
             setSolution( s );
@@ -93,7 +93,7 @@ void setupAlgorithms(std::vector<ToolBox::AlgorithmData> &algorithms){
                             g,            // coordinates
                             s.path,       // start path
                             2000,         // n iterations
-                            g.size()*0.1, // num. of disturbance
+                            g.size()*0.05 +1, // num. of disturbance
                             setSolution, log, chartLog, stopRequested
                 );
                 setSolution( s );

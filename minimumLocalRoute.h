@@ -18,7 +18,7 @@ Solution minimumLocalRoute(std::vector<Coordinate> &cities, int startNode,
     }
     auto start = std::chrono::steady_clock::now();
     sol.distance = getPathDistance(cities, sol.path);
-    for(int i = 1; i < sol.path.size(); i++) {
+    for(int i = 1; i < sol.path.size() && !stopRequested(); i++) {
         Coordinate source = cities.at(sol.path.at(i));
         double smallerDistance = sol.distance;
         int smallerCityIndex;

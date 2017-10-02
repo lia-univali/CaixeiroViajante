@@ -8,7 +8,7 @@ ChartPane::ChartPane(QScrollArea *scrollArea, QWidget *parent) : QWidget(parent)
     setFixedWidth(StartWidth);
     QTimer *fpsTimer = new QTimer();
     QObject::connect(fpsTimer, SIGNAL(timeout()), this, SLOT(callRepaint()));
-    fpsTimer->start( 30 );
+    fpsTimer->start( 20 );
 }
 
 int i = 0;

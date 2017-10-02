@@ -99,7 +99,7 @@ void ToolBox::startThread()
         graphicPane->getGraphicData(),
 
         // initial node
-        0,
+        rand() % graphicPane->getGraphicData().size(),
 
         // set solution
         [this](const Solution &s) -> void {
