@@ -7,11 +7,9 @@
 #include "solution.h"
 
 Coordinate getCoordinate(std::vector<Coordinate> &coordinates, std::vector<int> &path, int index) {
-    if(index == coordinates.size())
-        index = 0;
     if(index < 0)
         index = coordinates.size() - 1;
-    return coordinates.at(path.at(index));
+    return coordinates.at(path.at(index % coordinates.size()));
 }
 
 double getDistanceBetween(Coordinate a, Coordinate b, Coordinate c) {
@@ -165,9 +163,9 @@ Solution iteratedSearch(std::vector<Coordinate> &cities, std::vector<int> startP
                 log( "[ "+ std::to_string(seconds) +" segundos ] Distância melhorada: " + std::to_string(currentSol.distance) );
             }
         } else {
-            if ( it >= maxIt ){
+            /*if ( it >= maxIt ){
                 break;
-            }
+            }*/
             randomDisturb(bestLocalSol.path, disturbanceFactor);
             bestLocalSol.distance = getPathDistance(cities, bestLocalSol.path);
             currentSol = bestLocalSol;
@@ -179,7 +177,7 @@ Solution iteratedSearch(std::vector<Coordinate> &cities, std::vector<int> startP
         chartLog( currentSol.distance );
 
         it++;
-    } while ( it < maxIt && !stopRequested() );
+    } while (/* it < maxIt && */!stopRequested() );
     log( "Melhor distância encontrada: " + std::to_string(bestGlobalSol.distance) );
     return bestGlobalSol;
 }
