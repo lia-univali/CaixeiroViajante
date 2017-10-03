@@ -1,8 +1,7 @@
 #ifndef BRUTEFORCE_H
 #define BRUTEFORCE_H
 
-#include "tspreader.h"
-#include "solution.h"
+#include "resolution/solution.h"
 #include <vector>
 #include <algorithm>
 #include <math.h>

@@ -1,7 +1,7 @@
 #ifndef MINIMUMLOCALROUTE_H
 #define MINIMUMLOCALROUTE_H
 
-#include "solution.h"
+#include "resolution/solution.h"
 
 Solution minimumLocalRoute(std::vector<Coordinate> &cities, int startNode,
                            std::function<void(const Solution&)> setSolution,

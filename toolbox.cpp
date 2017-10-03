@@ -1,7 +1,7 @@
 #include "toolbox.h"
 
-#include "setupalgorithms.h"
-#include "tspreader.h"
+#include "resolution/setupalgorithms.h"
+#include "resolution/tspreader.h"
 
 ToolBox::ToolBox(QWidget *parent) : QWidget(parent)
 {

@@ -4,7 +4,7 @@
 #include <algorithm>
 #include <stdlib.h>
 #include <time.h>
-#include "solution.h"
+#include "resolution/solution.h"
 
 Coordinate getCoordinate(std::vector<Coordinate> &coordinates, std::vector<int> &path, int index) {
     if(index < 0)

@@ -8,9 +8,7 @@
 #include <iterator>
 #include <string>
 #include <stdlib.h>
-#include "solution.h"
-
-#include "solution.h"
+#include "resolution/solution.h"
 
 template<typename Out>
 void split(const std::string &s, char delim, Out result) {

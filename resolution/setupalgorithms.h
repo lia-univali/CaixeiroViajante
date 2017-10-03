@@ -1,10 +1,9 @@
 #ifndef SETUPALGORITHMS_H
 #define SETUPALGORITHMS_H
 
-#include "toolbox.h"
-#include "bruteforce.h"
-#include "iteratedSearch.h"
-#include "minimumLocalRoute.h"
+#include "methods/bruteforce.h"
+#include "methods/iteratedSearch.h"
+#include "methods/minimumLocalRoute.h"
 
 void setupAlgorithms(std::vector<ToolBox::AlgorithmData> &algorithms){
     { /// BRUTE FORCE
