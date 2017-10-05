@@ -91,7 +91,7 @@ void ToolBox::setSolution(const Solution &s){
 
 void ToolBox::startThread()
 {
-    auto last = std::chrono::system_clock::now();
+//    auto last = std::chrono::system_clock::now();
     algorithms.at( algorithmsBox->currentIndex() ).run(
 
         // graphic Data
@@ -119,18 +119,18 @@ void ToolBox::startThread()
         },
 
         // log chart data
-        [this,&last](double value) -> void {
+        [this/*,&last*/](double value) -> void {
             QMetaObject::invokeMethod(
                 this,
                 "appendStep",
                 Qt::QueuedConnection,
                 Q_ARG( double, value )
             );
-            auto now = std::chrono::system_clock::now();
-            if ( now-last < std::chrono::milliseconds(1) ){
-                std::this_thread::sleep_for(std::chrono::milliseconds(1));
-            }
-            last = std::chrono::system_clock::now();
+//            auto now = std::chrono::system_clock::now();
+//            if ( now-last < std::chrono::milliseconds(1) ){
+//                std::this_thread::sleep_for(std::chrono::milliseconds(1));
+//            }
+//            last = std::chrono::system_clock::now();
         },
 
         // log iterations

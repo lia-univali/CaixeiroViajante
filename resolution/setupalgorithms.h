@@ -4,6 +4,7 @@
 #include "methods/bruteforce.h"
 #include "methods/iteratedSearch.h"
 #include "methods/minimumLocalRoute.h"
+#include "methods/guidedsearch.h"
 
 void setupAlgorithms(std::vector<ToolBox::AlgorithmData> &algorithms){
     { /// BRUTE FORCE
@@ -105,7 +106,26 @@ void setupAlgorithms(std::vector<ToolBox::AlgorithmData> &algorithms){
         };
         algorithms.emplace_back(iteratedWithConstructive);
     }
-
+    { /// GUIDED
+        ToolBox::AlgorithmData guided;
+        guided.name = "Busca Guiada";
+        guided.run = [](
+                GraphicData &g,
+                int,
+                std::function<void(const Solution&)> setSolution,
+                std::function<void(std::string)> log,
+                std::function<void(double)> chartLog,
+                std::function<void(std::string)> logIterations,
+                std::function<void()>, // clearChart
+                std::function<bool()> stopRequested,
+                std::function<void()> onFinish
+            ) -> void {
+            Solution s = guidedSearch(g, setSolution, log, chartLog, logIterations, stopRequested);
+            setSolution( s );
+            onFinish();
+        };
+        algorithms.emplace_back(guided);
+    }
 }
 
 #endif // SETUPALGORITHMS_H
