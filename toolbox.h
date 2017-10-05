@@ -33,7 +33,8 @@ public:
                 int,                                  // initial node
                 std::function<void(const Solution&)>, // set solution
                 std::function<void(std::string)>,     // log
-                std::function<void(double)>,          // chart data
+                std::function<void(double)>,          // log chart data
+                std::function<void(std::string)>,     // log iterations
                 std::function<void()>,                // clearChart
                 std::function<bool()>,                // if stop requested
                 std::function<void()>                 // on finish
@@ -50,6 +51,7 @@ public slots:
     void clearChart();
     void appendStep(double);
     void appendLog(QString);
+    void logIterations(QString);
     void setSolution(const Solution&);
 
 private:

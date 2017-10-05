@@ -15,11 +15,12 @@ void setupAlgorithms(std::vector<ToolBox::AlgorithmData> &algorithms){
                 std::function<void(const Solution&)> setSolution,
                 std::function<void(std::string)> log,
                 std::function<void(double)> chartLog,
+                std::function<void(std::string)> logIterations,
                 std::function<void()>,
                 std::function<bool()> stopRequested,
                 std::function<void()> onFinish
             ) -> void {
-            Solution s = bruteForceSearch(g, initialNode, setSolution, log, chartLog, stopRequested);
+            Solution s = bruteForceSearch(g, initialNode, setSolution, log, chartLog, logIterations, stopRequested);
             setSolution( s );
             onFinish();
         };
@@ -34,12 +35,13 @@ void setupAlgorithms(std::vector<ToolBox::AlgorithmData> &algorithms){
                 std::function<void(const Solution&)> setSolution,
                 std::function<void(std::string)> log,
                 std::function<void(double)> chartLog,
+                std::function<void(std::string)> logIterations,
                 std::function<void()>,
                 std::function<bool()> stopRequested,
                 std::function<void()> onFinish
             ) -> void {
 
-            Solution s = minimumLocalRoute(g, initialNode, setSolution, log, chartLog, stopRequested);
+            Solution s = minimumLocalRoute(g, initialNode, setSolution, log, chartLog, logIterations, stopRequested);
             setSolution( s );
             onFinish();
         };
@@ -55,6 +57,7 @@ void setupAlgorithms(std::vector<ToolBox::AlgorithmData> &algorithms){
                 std::function<void(const Solution&)> setSolution,
                 std::function<void(std::string)> log,
                 std::function<void(double)> chartLog,
+                std::function<void(std::string)> logIterations,
                 std::function<void()>,
                 std::function<bool()> stopRequested,
                 std::function<void()> onFinish
@@ -63,7 +66,7 @@ void setupAlgorithms(std::vector<ToolBox::AlgorithmData> &algorithms){
                         g,            // coordinates
                         2000,         // n iterations
                         g.size()*0.05 +1, // num. of disturbance
-                        setSolution, log, chartLog, stopRequested
+                        setSolution, log, chartLog, logIterations, stopRequested
             );
             setSolution( s );
             onFinish();
@@ -79,11 +82,12 @@ void setupAlgorithms(std::vector<ToolBox::AlgorithmData> &algorithms){
                 std::function<void(const Solution&)> setSolution,
                 std::function<void(std::string)> log,
                 std::function<void(double)> chartLog,
+                std::function<void(std::string)> logIterations,
                 std::function<void()> clearChart,
                 std::function<bool()> stopRequested,
                 std::function<void()> onFinish
             ) -> void {
-            Solution s = minimumLocalRoute(g, initialNode, setSolution, log, chartLog, stopRequested);
+            Solution s = minimumLocalRoute(g, initialNode, setSolution, log, chartLog, logIterations, stopRequested);
             setSolution( s );
             if ( !stopRequested() ){
                 clearChart();
@@ -92,8 +96,8 @@ void setupAlgorithms(std::vector<ToolBox::AlgorithmData> &algorithms){
                             g,            // coordinates
                             s.path,       // start path
                             2000,         // n iterations
-                            g.size()*0.05 +1, // num. of disturbance
-                            setSolution, log, chartLog, stopRequested
+                            g.size()*0.2 +1, // num. of disturbance
+                            setSolution, log, chartLog, logIterations, stopRequested
                 );
                 setSolution( s );
             }

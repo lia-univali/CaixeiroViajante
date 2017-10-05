@@ -76,17 +76,16 @@ void ToolBox::runClicked(){
 void ToolBox::clearChart(){
     this->chartPane->clearChart();
 }
-
 void ToolBox::appendStep(double value){
     this->chartPane->addStep( value );
 }
-
 void ToolBox::appendLog(QString log){
     this->logPane->addLog( log.toStdString() );
 }
-
-void ToolBox::setSolution(const Solution &s)
-{
+void ToolBox::logIterations(QString str){
+    this->logPane->setIterations( str );
+}
+void ToolBox::setSolution(const Solution &s){
     this->graphicPane->setSolution(s);
 }
 
@@ -119,7 +118,7 @@ void ToolBox::startThread()
             );
         },
 
-        // chart data
+        // log chart data
         [this,&last](double value) -> void {
             QMetaObject::invokeMethod(
                 this,
@@ -132,6 +131,15 @@ void ToolBox::startThread()
                 std::this_thread::sleep_for(std::chrono::milliseconds(1));
             }
             last = std::chrono::system_clock::now();
+        },
+
+        // log iterations
+        [this](std::string str) -> void {
+            QMetaObject::invokeMethod(
+                this, "logIterations",
+                Qt::QueuedConnection,
+                Q_ARG( QString, QString::fromStdString(str) )
+            );
         },
 
         // clear chart

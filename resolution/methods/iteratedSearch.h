@@ -78,6 +78,7 @@ Solution iteratedSearch(std::vector<Coordinate> &cities, std::vector<int> startP
                         std::function<void(const Solution&)> setSolution = nullptr,
                         std::function<void(std::string)> log = nullptr,
                         std::function<void(double)> chartLog = nullptr,
+                        std::function<void(std::string)> logIterations = nullptr,
                         std::function<bool()> stopRequested = nullptr ) {
     auto start = std::chrono::steady_clock::now();
 
@@ -177,6 +178,7 @@ Solution iteratedSearch(std::vector<Coordinate> &cities, std::vector<int> startP
         chartLog( currentSol.distance );
 
         it++;
+        logIterations( std::to_string(it) );
     } while (/* it < maxIt && */!stopRequested() );
     log( "Melhor distância encontrada: " + std::to_string(bestGlobalSol.distance) );
     return bestGlobalSol;
@@ -186,13 +188,14 @@ Solution iteratedSearch(std::vector<Coordinate> &coordinates, int maxIt, int dis
                         std::function<void(const Solution&)> setSolution = nullptr,
                         std::function<void(std::string)> log = nullptr,
                         std::function<void(double)> chartLog = nullptr,
+                        std::function<void(std::string)> logIterations = nullptr,
                         std::function<bool()> stopRequested = nullptr
                 ) {
     std::vector<int> path;
     for(size_t i = 0; i < coordinates.size(); i++)
         path.push_back(i);
     std::random_shuffle( path.begin(), path.end() );
-    return iteratedSearch(coordinates, path, maxIt, disturbanceFactor, setSolution, log, chartLog, stopRequested );
+    return iteratedSearch(coordinates, path, maxIt, disturbanceFactor, setSolution, log, chartLog, logIterations, stopRequested );
 }
 
 #endif // ITERATEDSEARCH_H

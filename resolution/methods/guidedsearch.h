@@ -1,0 +1,7 @@
+#ifndef GUIDEDSEARCH
+#define GUIDEDSEARCH
+
+
+
+
+#endif // GUIDEDSEARCH

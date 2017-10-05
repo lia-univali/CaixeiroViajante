@@ -16,8 +16,13 @@ LogPane::LogPane(QWidget *parent) : QWidget(parent)
     titleWidget->setLayout(titleLayout);
     title = new QLabel("Log");
     title->setStyleSheet("color: black; font-weight: bold;");
+
+    iterations = new QLabel("");
+    clearBtn = new QPushButton("Limpar Log");\
+
+    titleLayout->setSpacing(10);
     titleLayout->addWidget(title, 1);
-    clearBtn = new QPushButton("Limpar Log");
+    titleLayout->addWidget(iterations, 0);
     titleLayout->addWidget(clearBtn, 0);
 
     connect( clearBtn, SIGNAL(clicked()), this, SLOT(clearLog()) );
@@ -37,6 +42,7 @@ LogPane::LogPane(QWidget *parent) : QWidget(parent)
 
 void LogPane::clearLog(){
     logs->setPlainText("");
+    iterations->setText("");
 }
 
 void LogPane::addLog(std::string str){
@@ -50,5 +56,9 @@ void LogPane::addLog(std::string str){
 //    QTextCursor textCursor = logs->textCursor();
 //    textCursor.movePosition(QTextCursor::End);
 //    logs->setTextCursor(textCursor);
+}
+
+void LogPane::setIterations(QString str){
+    iterations->setText( str );
 }
 

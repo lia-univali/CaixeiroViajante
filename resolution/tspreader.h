@@ -44,7 +44,10 @@ std::vector<Coordinate> getTspInstance(
             std::string sub = line.substr( line.find_last_of(':')+1 );
             while (sub.front() == ' ') sub = sub.substr(1);
             while (sub.back()  == ' ') sub = sub.substr(0,sub.size()-1);
-            metadata["pontos"] = sub;
+            std::stringstream ss;
+            ss.imbue(std::locale("pt_BR.UTF-8"));
+            ss << std::fixed << std::stoull(sub);
+            metadata["pontos"] = ss.str();
         }
     } while ( line != "NODE_COORD_SECTION" );
 

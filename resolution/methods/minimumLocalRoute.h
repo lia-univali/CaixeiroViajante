@@ -7,6 +7,7 @@ Solution minimumLocalRoute(std::vector<Coordinate> &cities, int startNode,
                            std::function<void(const Solution&)> setSolution,
                            std::function<void(std::string)> log,
                            std::function<void(double)> chartLog,
+                           std::function<void(std::string)> logIterations,
                            std::function<bool()> stopRequested ) {
     Solution sol;
     sol.path.push_back(startNode);
@@ -14,6 +15,7 @@ Solution minimumLocalRoute(std::vector<Coordinate> &cities, int startNode,
         if(i != startNode)
             sol.path.push_back(i);
     }
+    int it = 0;
     auto start = std::chrono::steady_clock::now();
     sol.distance = getPathDistance(cities, sol.path);
     for(int i = 0; i < sol.path.size() - 1 && !stopRequested(); i++) {
@@ -75,6 +77,8 @@ Solution minimumLocalRoute(std::vector<Coordinate> &cities, int startNode,
         log( "[ "+ std::to_string(seconds) +" segundos ] Distância construída: " + std::to_string(sol.distance) );
         chartLog( sol.distance );
         setSolution( sol );
+        it++;
+        logIterations( std::to_string(it) );
     }
     log( "Distância final: " + std::to_string(sol.distance) );
     return sol;
