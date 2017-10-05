@@ -10,7 +10,6 @@
 #include <QTimer>
 
 #include "graphic.h"
-#include "solution.h"
 
 class GraphicPane : public QWidget
 {

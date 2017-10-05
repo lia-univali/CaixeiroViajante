@@ -1,4 +1,4 @@
-#include "solution.h"
+#include "resolution/solution.h"
 
 long double getPathDistance(std::vector<Coordinate> &cities, std::vector<int> &path) {
     double distance = 0;

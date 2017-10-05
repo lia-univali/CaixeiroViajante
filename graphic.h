@@ -3,7 +3,7 @@
 
 #include <vector>
 
-#include "solution.h"
+#include "resolution/solution.h"
 
 using GraphicData = std::vector<Coordinate>;
 

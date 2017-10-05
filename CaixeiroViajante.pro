@@ -16,22 +16,23 @@ QMAKE_CXXFLAGS += -fopenmp
 LIBS += -fopenmp
 
 SOURCES += main.cpp\
-        mainwindow.cpp \
+    mainwindow.cpp \
     logpane.cpp \
     toolbox.cpp \
     graphicpane.cpp \
-    solution.cpp \
-    chartpane.cpp
+    chartpane.cpp \
+    resolution/solution.cpp
 
 HEADERS  += mainwindow.h \
     logpane.h \
     toolbox.h \
-    setupalgorithms.h \
     graphicpane.h \
     graphic.h \
-    tspreader.h \
-    solution.h \
-    bruteforce.h \
-    minimumLocalRoute.h \
-    iteratedSearch.h \
-    chartpane.h
+    chartpane.h \
+    resolution/methods/bruteforce.h \
+    resolution/methods/guidedsearch.h \
+    resolution/methods/iteratedSearch.h \
+    resolution/methods/minimumLocalRoute.h \
+    resolution/setupalgorithms.h \
+    resolution/solution.h \
+    resolution/tspreader.h

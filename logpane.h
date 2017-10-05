@@ -15,6 +15,7 @@ class LogPane : public QWidget
 public:
     explicit LogPane(QWidget *parent = 0);
     void addLog(std::string);
+    void setIterations(QString);
 
 signals:
 
@@ -27,6 +28,7 @@ private:
     QHBoxLayout *titleLayout;
 
     QLabel *title;
+    QLabel *iterations;
     QPushButton *clearBtn;
     QTextEdit *logs;
 

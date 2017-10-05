@@ -1,7 +1,7 @@
 #include "toolbox.h"
 
-#include "setupalgorithms.h"
-#include "tspreader.h"
+#include "resolution/setupalgorithms.h"
+#include "resolution/tspreader.h"
 
 ToolBox::ToolBox(QWidget *parent) : QWidget(parent)
 {
@@ -76,23 +76,22 @@ void ToolBox::runClicked(){
 void ToolBox::clearChart(){
     this->chartPane->clearChart();
 }
-
 void ToolBox::appendStep(double value){
     this->chartPane->addStep( value );
 }
-
 void ToolBox::appendLog(QString log){
     this->logPane->addLog( log.toStdString() );
 }
-
-void ToolBox::setSolution(const Solution &s)
-{
+void ToolBox::logIterations(QString str){
+    this->logPane->setIterations( str );
+}
+void ToolBox::setSolution(const Solution &s){
     this->graphicPane->setSolution(s);
 }
 
 void ToolBox::startThread()
 {
-    auto last = std::chrono::system_clock::now();
+//    auto last = std::chrono::system_clock::now();
     algorithms.at( algorithmsBox->currentIndex() ).run(
 
         // graphic Data
@@ -119,19 +118,28 @@ void ToolBox::startThread()
             );
         },
 
-        // chart data
-        [this,&last](double value) -> void {
+        // log chart data
+        [this/*,&last*/](double value) -> void {
             QMetaObject::invokeMethod(
                 this,
                 "appendStep",
                 Qt::QueuedConnection,
                 Q_ARG( double, value )
             );
-            auto now = std::chrono::system_clock::now();
-            if ( now-last < std::chrono::milliseconds(1) ){
-                std::this_thread::sleep_for(std::chrono::milliseconds(1));
-            }
-            last = std::chrono::system_clock::now();
+//            auto now = std::chrono::system_clock::now();
+//            if ( now-last < std::chrono::milliseconds(1) ){
+//                std::this_thread::sleep_for(std::chrono::milliseconds(1));
+//            }
+//            last = std::chrono::system_clock::now();
+        },
+
+        // log iterations
+        [this](std::string str) -> void {
+            QMetaObject::invokeMethod(
+                this, "logIterations",
+                Qt::QueuedConnection,
+                Q_ARG( QString, QString::fromStdString(str) )
+            );
         },
 
         // clear chart
