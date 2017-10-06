@@ -6,11 +6,11 @@
 
 using Tabu = std::pair<int, int>;
 
-bool hasTabuConfig(Tabu tabus[], std::vector<int> path) {
+bool hasTabuConfig(Tabu tabus[], std::vector<int> path, int tabuLength) {
     for(int i = 0; i < path.size(); i++) {
         int source = path.at(i);
-        int target = path.at(i % path.size());
-        for(int j = 0; j < sizeof(tabus)/sizeof(*tabus); j++) {
+        int target = path.at((i + 1) % path.size());
+        for(int j = 0; j < tabuLength; j++) {
             if(tabus[j].first == source && tabus[j].second == target) {
 //            || (tabus[j].second == source && tabus[j].first == target)) {
                 return true;
@@ -30,26 +30,36 @@ bool configAlreadyExists(Tabu tabus[], Tabu tabu, int tabuLength) {
     return false;
 }
 
-Tabu newTabu(int source, int target, int pathSize) {
+Tabu newTabu(int source, int target, std::vector<int> &path) {
     if(source < 0)
-        source = pathSize - 1;
-    if(source == pathSize)
+        source = path.size() - 1;
+    if(source == path.size())
         source = 0;
     if(target < 0)
-        target = pathSize - 1;
-    if(target == pathSize)
+        target = path.size() - 1;
+    if(target == path.size())
         target = 0;
     Tabu tabu;
-    tabu.first = source;
-    tabu.second = target;
+    tabu.first = path.at(source);
+    tabu.second = path.at(target);
     return tabu;
 }
 
-Solution tabuSearch(std::vector<Coordinate> &coordinates, Solution &sol, int itMax, int tabuLength = 5) {
+Solution tabuSearch(std::vector<Coordinate> &coordinates,
+                    Solution &sol,
+                    std::function<void(const Solution&)> setSolution = nullptr,
+                    std::function<void(std::string)> log = nullptr,
+                    std::function<void(double)> chartLog = nullptr,
+                    std::function<void(std::string)> logIterations = nullptr,
+                    std::function<bool()> stopRequested = nullptr,
+                    int tabuLength = 5,
+                    int itMax = 1000) {
     Tabu tabus[tabuLength];
-
     Solution bestSol = sol;
     Solution currentSol = sol;
+    auto start = std::chrono::steady_clock::now();
+    log("Iniciado");
+
     int it = 0;
     do {
         Solution nextSol;
@@ -75,7 +85,7 @@ Solution tabuSearch(std::vector<Coordinate> &coordinates, Solution &sol, int itM
                     getCoordinate(coordinates, neighbor.path, i)
                 );
                 neighbor.distance += tmp;
-                if(tmp < tabuDistance && !configAlreadyExists(tabus, newTabu(i - 1, i, neighbor.path.size()), tabuLength)) {
+                if(tmp < tabuDistance && !configAlreadyExists(tabus, newTabu(i - 1, i, neighbor.path), tabuLength)) {
                     tabuDistance = tmp;
                     tabuSource = i - 1;
                     tabuTarget = i;
@@ -85,7 +95,7 @@ Solution tabuSearch(std::vector<Coordinate> &coordinates, Solution &sol, int itM
                     getCoordinate(coordinates, neighbor.path, i + 1)
                 );
                 neighbor.distance += tmp;
-                if(tmp < tabuDistance && !configAlreadyExists(tabus, newTabu(i, i + 1, neighbor.path.size()), tabuLength)) {
+                if(tmp < tabuDistance && !configAlreadyExists(tabus, newTabu(i, i + 1, neighbor.path), tabuLength)) {
                     tabuDistance = tmp;
                     tabuSource = i;
                     tabuTarget = i + 1;
@@ -95,7 +105,7 @@ Solution tabuSearch(std::vector<Coordinate> &coordinates, Solution &sol, int itM
                     getCoordinate(coordinates, neighbor.path, j)
                 );
                 neighbor.distance += tmp;
-                if(tmp < tabuDistance && !configAlreadyExists(tabus, newTabu(j - 1, j, neighbor.path.size()), tabuLength)) {
+                if(tmp < tabuDistance && !configAlreadyExists(tabus, newTabu(j - 1, j, neighbor.path), tabuLength)) {
                     tabuDistance = tmp;
                     tabuSource = j - 1;
                     tabuTarget = j;
@@ -105,44 +115,53 @@ Solution tabuSearch(std::vector<Coordinate> &coordinates, Solution &sol, int itM
                     getCoordinate(coordinates, neighbor.path, j + 1)
                 );
                 neighbor.distance += tmp;
-                if(tmp < tabuDistance && !configAlreadyExists(tabus, newTabu(j, j + 1, neighbor.path.size()), tabuLength)) {
+                if(tmp < tabuDistance && !configAlreadyExists(tabus, newTabu(j, j + 1, neighbor.path), tabuLength)) {
                     tabuDistance = tmp;
                     tabuSource = j;
                     tabuTarget = j + 1;
                 }
-                if(hasTabuConfig(tabus, neighbor.path)) {
+                if(hasTabuConfig(tabus, neighbor.path, tabuLength)) {
                     continue;
-                }
-                if(neighbor.distance < bestSol.distance) {
-                    bestSol = neighbor;
                 }
                 if(neighbor.distance < nextSol.distance) {
                     nextSol = neighbor;
                 }
+                if(neighbor.distance < bestSol.distance) {
+                    bestSol = neighbor;
+                    auto now = std::chrono::steady_clock::now();
+                    double seconds = std::chrono::duration<double>(now-start).count();
+                    log( "[ "+ std::to_string(seconds) +" segundos ] Distância melhorada: " + std::to_string(currentSol.distance) );
+                }
             }
         }
-        Tabu tabu = newTabu(tabuSource, tabuTarget, coordinates.size());
+        Tabu tabu = newTabu(tabuSource, tabuTarget, nextSol.path);
         tabus[it % tabuLength] = tabu;
 
         currentSol = nextSol;
 
-//        for(int i = 0; i < tabuLength; i++) {
-//            std::cout << tabus[i].first << " " << tabus[i].second << std::endl;
-//        }
-//        system("PAUSE");
-//        system("CLS");
-    } while(++it < itMax);
+        setSolution( currentSol );
+        chartLog( currentSol.distance );
+
+        it++;
+    } while(!stopRequested()/*it < itMax*/);
     return bestSol;
 }
 
-Solution tabuSearch(std::vector<Coordinate> &coordinates, int itMax, int tabuLength = 5) {
+Solution tabuSearch(std::vector<Coordinate> &coordinates,
+                    std::function<void(const Solution&)> setSolution = nullptr,
+                    std::function<void(std::string)> log = nullptr,
+                    std::function<void(double)> chartLog = nullptr,
+                    std::function<void(std::string)> logIterations = nullptr,
+                    std::function<bool()> stopRequested = nullptr,
+                    int tabuLength = 5,
+                    int itMax = 1000) {
     Solution sol;
     for(int i = 0; i < coordinates.size(); i++) {
         sol.path.push_back(i);
     }
     std::random_shuffle(sol.path.begin(), sol.path.end());
     sol.distance = getPathDistance(coordinates, sol.path);
-    return tabuSearch(coordinates, sol, itMax, tabuLength);
+    return tabuSearch(coordinates, sol, setSolution, log, chartLog, logIterations, stopRequested, tabuLength, itMax);
 }
 
 #endif // TABU_H

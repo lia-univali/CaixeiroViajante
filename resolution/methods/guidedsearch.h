@@ -33,8 +33,8 @@ double deltaCity(GSolution &sol, Cities &cities, size_t cityIndex){
     return distance;
 }
 
-Solution getNeighbor(const GSolution &sol, Cities &cities, std::function<double(GSolution&)> objective, bool &improved){
-    Solution best = sol;
+GSolution getNeighbor(const GSolution &sol, Cities &cities, std::function<double(GSolution&)> objective, bool &improved){
+    GSolution best = sol;
     improved = false;
     #pragma omp parallel for
     for (size_t i = 0; i < cities.size(); ++i) {
@@ -189,7 +189,7 @@ Solution guidedSearch(Cities &cities,
             auto pair = doPair( sol.path.at(previous), sol.path.at(i) );
             utils[ pair ] = cost.at(pair) / ( 1 + penalties.at( pair ) );
             if ( utils[ pair ] > max ){
-                max = utils[ áir ];
+                max = utils[ pair ];
             }
             previous = i;
         }

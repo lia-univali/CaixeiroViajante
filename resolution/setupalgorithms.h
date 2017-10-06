@@ -5,6 +5,7 @@
 #include "methods/iteratedSearch.h"
 #include "methods/minimumLocalRoute.h"
 #include "methods/guidedsearch.h"
+#include "methods/tabu.h"
 
 void setupAlgorithms(std::vector<ToolBox::AlgorithmData> &algorithms){
     { /// BRUTE FORCE
@@ -125,6 +126,26 @@ void setupAlgorithms(std::vector<ToolBox::AlgorithmData> &algorithms){
             onFinish();
         };
         algorithms.emplace_back(guided);
+    }
+    { /// TABU
+        ToolBox::AlgorithmData tabu;
+        tabu.name = "Busca Tabu";
+        tabu.run = [](
+                GraphicData &g,
+                int,
+                std::function<void(const Solution&)> setSolution,
+                std::function<void(std::string)> log,
+                std::function<void(double)> chartLog,
+                std::function<void(std::string)> logIterations,
+                std::function<void()>, // clearChart
+                std::function<bool()> stopRequested,
+                std::function<void()> onFinish
+            ) -> void {
+            Solution s = tabuSearch(g, setSolution, log, chartLog, logIterations, stopRequested, 50);
+            setSolution( s );
+            onFinish();
+        };
+        algorithms.emplace_back(tabu);
     }
 }
 

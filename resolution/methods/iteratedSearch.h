@@ -91,6 +91,7 @@ Solution iteratedSearch(std::vector<Coordinate> &cities, std::vector<int> startP
     Solution bestLocalSol = currentSol;
     int it = 0;
     std::mutex mut;
+    bool disturbing = false;
     do {
         std::vector<int> currentPath = currentSol.path;
         double currentDistance = currentSol.distance;
@@ -162,6 +163,7 @@ Solution iteratedSearch(std::vector<Coordinate> &cities, std::vector<int> startP
                 auto now = std::chrono::steady_clock::now();
                 double seconds = std::chrono::duration<double>(now-start).count();
                 log( "[ "+ std::to_string(seconds) +" segundos ] Distância melhorada: " + std::to_string(currentSol.distance) );
+                disturbing = false;
             }
         } else {
             /*if ( it >= maxIt ){
@@ -170,7 +172,10 @@ Solution iteratedSearch(std::vector<Coordinate> &cities, std::vector<int> startP
             randomDisturb(bestLocalSol.path, disturbanceFactor);
             bestLocalSol.distance = getPathDistance(cities, bestLocalSol.path);
             currentSol = bestLocalSol;
-            log( "Recalculando rota aletoriamente..." );
+            if(!disturbing) {
+                log( "Recalculando rota aletoriamente..." );
+                disturbing = true;
+            }
 //            rouleteDisturb(cities, bestSol);
         }
 

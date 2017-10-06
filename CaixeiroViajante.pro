@@ -35,4 +35,5 @@ HEADERS  += mainwindow.h \
     resolution/methods/minimumLocalRoute.h \
     resolution/setupalgorithms.h \
     resolution/solution.h \
-    resolution/tspreader.h
+    resolution/tspreader.h \
+    resolution/methods/tabu.h
