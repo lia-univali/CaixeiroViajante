@@ -52,7 +52,8 @@ Solution tabuSearch(std::vector<Coordinate> &coordinates, Solution &sol, int itM
     Solution currentSol = sol;
     int it = 0;
     do {
-        Solution nextSol = currentSol;
+        Solution nextSol;
+        nextSol.distance = INT_MAX;
         double tabuDistance = INT_MAX;
         int tabuSource, tabuTarget;
         for(int i = 0; i < sol.path.size(); i++) {
