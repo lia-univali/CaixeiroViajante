@@ -53,8 +53,8 @@ Solution tabuSearch(std::vector<Coordinate> &coordinates, Solution &sol, int itM
     int it = 0;
     do {
         Solution nextSol = currentSol;
-        Tabu candidate;
-        double highestDistance = 0;
+        double tabuDistance = INT_MAX;
+        int tabuSource, tabuTarget;
         for(int i = 0; i < sol.path.size(); i++) {
             for(int j = i + 1; j < sol.path.size(); j++) {
                 Solution neighbor = currentSol;
@@ -74,40 +74,40 @@ Solution tabuSearch(std::vector<Coordinate> &coordinates, Solution &sol, int itM
                     getCoordinate(coordinates, neighbor.path, i)
                 );
                 neighbor.distance += tmp;
-                if(tmp > highestDistance && !configAlreadyExists(tabus, newTabu(i - 1, i, neighbor.path.size()), tabuLength)) {
-                    highestDistance = tmp;
-                    candidate.first = i - 1;
-                    candidate.second = i;
+                if(tmp < tabuDistance && !configAlreadyExists(tabus, newTabu(i - 1, i, neighbor.path.size()), tabuLength)) {
+                    tabuDistance = tmp;
+                    tabuSource = i - 1;
+                    tabuTarget = i;
                 }
                 tmp = euclidianDistance(
                     getCoordinate(coordinates, neighbor.path, i),
                     getCoordinate(coordinates, neighbor.path, i + 1)
                 );
                 neighbor.distance += tmp;
-                if(tmp > highestDistance && !configAlreadyExists(tabus, newTabu(i, i + 1, neighbor.path.size()), tabuLength)) {
-                    highestDistance = tmp;
-                    candidate.first = i;
-                    candidate.second = i + 1;
+                if(tmp < tabuDistance && !configAlreadyExists(tabus, newTabu(i, i + 1, neighbor.path.size()), tabuLength)) {
+                    tabuDistance = tmp;
+                    tabuSource = i;
+                    tabuTarget = i + 1;
                 }
                 tmp = euclidianDistance(
                     getCoordinate(coordinates, neighbor.path, j - 1),
                     getCoordinate(coordinates, neighbor.path, j)
                 );
                 neighbor.distance += tmp;
-                if(tmp > highestDistance && !configAlreadyExists(tabus, newTabu(j - 1, j, neighbor.path.size()), tabuLength)) {
-                    highestDistance = tmp;
-                    candidate.first = j - 1;
-                    candidate.second = j;
+                if(tmp < tabuDistance && !configAlreadyExists(tabus, newTabu(j - 1, j, neighbor.path.size()), tabuLength)) {
+                    tabuDistance = tmp;
+                    tabuSource = j - 1;
+                    tabuTarget = j;
                 }
                 tmp = euclidianDistance(
                     getCoordinate(coordinates, neighbor.path, j),
                     getCoordinate(coordinates, neighbor.path, j + 1)
                 );
                 neighbor.distance += tmp;
-                if(tmp > highestDistance && !configAlreadyExists(tabus, newTabu(j, j + 1, neighbor.path.size()), tabuLength)) {
-                    highestDistance = tmp;
-                    candidate.first = j;
-                    candidate.second = j + 1;
+                if(tmp < tabuDistance && !configAlreadyExists(tabus, newTabu(j, j + 1, neighbor.path.size()), tabuLength)) {
+                    tabuDistance = tmp;
+                    tabuSource = j;
+                    tabuTarget = j + 1;
                 }
                 if(hasTabuConfig(tabus, neighbor.path)) {
                     continue;
@@ -120,10 +120,16 @@ Solution tabuSearch(std::vector<Coordinate> &coordinates, Solution &sol, int itM
                 }
             }
         }
-        candidate.first = candidate.first % coordinates.size();
-        candidate.second = candidate.second % coordinates.size();
-        tabus[it % tabuLength] = candidate;
+        Tabu tabu = newTabu(tabuSource, tabuTarget, coordinates.size());
+        tabus[it % tabuLength] = tabu;
+
         currentSol = nextSol;
+
+//        for(int i = 0; i < tabuLength; i++) {
+//            std::cout << tabus[i].first << " " << tabus[i].second << std::endl;
+//        }
+//        system("PAUSE");
+//        system("CLS");
     } while(++it < itMax);
     return bestSol;
 }
