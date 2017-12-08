@@ -3,6 +3,7 @@
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
 {
+
     mainLayout = new QHBoxLayout;
     rightLayout = new QVBoxLayout;
     mainWidget = new QWidget;
@@ -63,7 +64,7 @@ MainWindow::~MainWindow()
 
 void MainWindow::keyReleaseEvent(QKeyEvent *e)
 {
-    if ( e->key() == Qt::Key_F5 ){
-//        graphPane->randomizeNodes();
+    if ( e->key() == Qt::Key_F11 ){
+        this->setWindowState(this->windowState() ^ Qt::WindowFullScreen);
     }
 }
